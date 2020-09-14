@@ -14,7 +14,7 @@ router.post('/register', async(req, res) => {
 	bcrypt_Password = bcrypt.hashSync(password,5)
 
 	const model = await Users.findOne({where:{username}})
-	// console.log(model)
+	console.log(model)
 	if(model){
 		return res.send('user exists!')
 	}
