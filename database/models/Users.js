@@ -3,22 +3,34 @@ const {
 	sequelize
 } = require('../init.js')
 
-const Users = sequelize.define('user',{
-	username : {
-		type:Sequelize.STRING,
-		validate:{
-			notEmpty:true
+const DataTypes = require('sequelize/lib/data-types');
+
+
+const Users = sequelize.define('user', {
+	uid: {
+		type: DataTypes.UUID,
+		allowNull: false,
+		primaryKey: true,
+		defaultValue: DataTypes.UUIDV1,
+		unique: true
+	},
+	username: {
+		type: Sequelize.STRING,
+		allowNull: false,
+		validate: {
+			notEmpty: true
 		}
 	},
-	password : {
-		type:Sequelize.STRING,
-		validate:{
-			notEmpty:true
+	password: {
+		type: Sequelize.STRING,
+		allowNull: false,
+		validate: {
+			notEmpty: true
 		}
-	}
+	},
 })
 
-Users.sync().then(()=>{
+Users.sync({ alter: true }).then(() => {
 	// 建表
 	console.log('表模型同步')
 })
