@@ -100,12 +100,9 @@ router.get('/email', (req, res) => {
 	} = require('../common/mail/sendMail.js');
 	// var email = req.query.email; //前端发送来的邮箱
 
-	
-
-
 	var verify = async (reqq, ress, next) => {
 		var email = 'zhangwei@syncsoft.com'
-		
+
 		const template = ejs.compile(fs.readFileSync(path.join(__dirname, '../common/mail/email.ejs'), 'utf8'));
 		const html = template({
 			title: 'Ejs',
