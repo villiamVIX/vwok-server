@@ -3,8 +3,9 @@ const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const TOKEN_SECRET = 'villiam_wok_2020_09_15'
 const Users = require('../database/models/Users.js')
-
-
+const fs = require('fs')
+const ejs = require('ejs')
+const path = require('path')
 const router = express.Router();
 
 router.get('/', function(req, res, next) {
@@ -91,24 +92,33 @@ router.post('/islogin', (req, res) => {
 	} = jwt.verify(token, TOKEN_SECRET)
 })
 
+
 router.get('/email', (req, res) => {
 	var {
 		Email,
 		user
-	} = require('../common/sendMail.js');
-		// var email = req.query.email; //前端发送来的邮箱
-		// console.log(email)
+	} = require('../common/mail/sendMail.js');
+	// var email = req.query.email; //前端发送来的邮箱
+
+	
+
+
 	var verify = async (reqq, ress, next) => {
-
 		var email = 'zhangwei@syncsoft.com'
-
+		
+		const template = ejs.compile(fs.readFileSync(path.join(__dirname, '../common/mail/email.ejs'), 'utf8'));
+		const html = template({
+			title: 'Ejs',
+			desc: '使用Ejs渲染模板',
+		});
 
 		var mailOptions = { //发送给用户显示的字段
-		
-			from: `WOK_SYS ${user}`,
+
+			from: `VWOK ${user}`,
 			to: email,
-			subject: '注册WOK邮箱验证',
-			text: '验证码：' + Email.verify
+			subject: '注册VWOK邮箱验证',
+			text: '验证码：' + Email.verify,
+			html
 		}
 		var info = await Email.transporter.sendMail(mailOptions)
 		if (info) {
