@@ -40,14 +40,14 @@ const Main_Works = sequelize.define('Main_Works', {
 		comment: '任务名'
 	},
 	start_time: {
-		type: Sequelize.DATE,
+		type: Sequelize.DATEONLY,
 		validate: {
 			notEmpty: true
 		},
 		comment: '开始时间'
 	},
 	estimate_time: {
-		type: Sequelize.DATE,
+		type: Sequelize.DATEONLY,
 		validate: {
 			notEmpty: true
 		},
