@@ -1,11 +1,18 @@
 const express = require('express');
 const Main_Works = require('../database/models/Main_Works.js')
+const Users = require('../database/models/Users.js')
 const router = express.Router();
 
-router.get('/', function(req, res, next) {
-	res.render('index', {
-		title: 'Express'
-	});
+router.get('/woklist',  async (req, res) => {
+	let {uid} = req.query
+	console.log(uid)
+	const user_works = await Main_Works.findAll({
+		where: {
+			creater_id:uid
+		}
+	})
+	
+	res.send({user_works})
 });
 
 

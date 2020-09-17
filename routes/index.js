@@ -19,8 +19,9 @@ router.post('/register', async (req, res) => {
 	let {
 		username,
 		password
-	} = req.body,
-		bcrypt_Password = bcrypt.hashSync(password, 5)
+	} = req.body
+	
+	let bcrypt_Password = bcrypt.hashSync(password, 5)
 
 	const model = await Users.findOne({
 		where: {
