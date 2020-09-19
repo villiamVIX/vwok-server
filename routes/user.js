@@ -14,18 +14,78 @@ router.get('/', function(req, res, next) {
 	});
 });
 
+
+router.post('/email', (req, res) => {
+	let {
+		Email_Tool,
+		user
+	} = require('../common/mail/sendMail.js');
+
+	let {
+		email
+	} = req.body; //前端发送来的验证邮箱
+	// 数据持久化 便于验证
+	req.sessionStore.verify = Email_Tool.verify;
+	req.sessionStore.email = email;
+
+	const verify = async (request, response, next) => {
+
+		const template = ejs.compile(fs.readFileSync(path.join(__dirname, '../common/mail/email.ejs'), 'utf8'));
+		
+		const html = template({
+			title: 'VWOK 验证码',
+			verify: req.sessionStore.verify,
+			email
+		});
+
+		const mailOptions = { //发送给用户显示的字段
+			from: `VWOK ${user}`,
+			to: email,
+			subject: '注册VWOK邮箱验证', // 邮件标题
+			html // ejs邮件模板
+		}
+		
+		const info = await Email_Tool.transporter.sendMail(mailOptions)
+			.then(data =>
+				res.send({
+					msg: '验证码发送成功',
+					code: 200
+				})
+			)
+			.catch(err => {
+				res.send({
+					code: 421,
+					msg: '发送失败，请检查邮箱',
+				})
+			})
+	};
+	verify()
+})
+
+
 // 注册
 router.post('/register', async (req, res) => {
 	let {
 		username,
-		password
+		password,
+		verify,
+		email
 	} = req.body
-	
+
+	if (email !== req.sessionStore.email || verify !== req.sessionStore.verify) {
+		res.send({
+			msg: "验证码校验错误",
+			// + req.sessionStore.email + req.sessionStore.verify,
+			status: 409
+		});
+		return false
+	}
+
 	let bcrypt_Password = bcrypt.hashSync(password, 5)
 
 	const model = await Users.findOne({
 		where: {
-			username
+			email
 		}
 	})
 	// console.log(model)
@@ -33,12 +93,12 @@ router.post('/register', async (req, res) => {
 		return res.send('user exists!')
 	}
 	const user = await Users.create({
-		username,
+		email,
 		password: bcrypt_Password
 	})
 	console.log(user.dataValues)
 	res.send({
-		username,
+		email,
 		password
 	})
 });
@@ -94,45 +154,6 @@ router.post('/islogin', (req, res) => {
 })
 
 
-router.get('/email', (req, res) => {
-	var {
-		Email,
-		user
-	} = require('../common/mail/sendMail.js');
-	// var email = req.query.email; //前端发送来的邮箱
-
-	var verify = async (reqq, ress, next) => {
-		var email = 'zhangwei@syncsoft.com'
-
-		const template = ejs.compile(fs.readFileSync(path.join(__dirname, '../common/mail/email.ejs'), 'utf8'));
-		const html = template({
-			title: 'Ejs',
-			desc: '使用Ejs渲染模板',
-		});
-
-		var mailOptions = { //发送给用户显示的字段
-
-			from: `VWOK ${user}`,
-			to: email,
-			subject: '注册VWOK邮箱验证',
-			text: '验证码：' + Email.verify,
-			html
-		}
-		var info = await Email.transporter.sendMail(mailOptions)
-		if (info) {
-			res.send({
-				msg: '验证码发送成功',
-				status: 0
-			});
-		} else {
-			res.send({
-				msg: '验证码发送失败',
-				status: -1
-			});
-		}
-	};
-	verify()
-})
 
 
 

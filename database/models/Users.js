@@ -14,6 +14,13 @@ const Users = sequelize.define('user', {
 		defaultValue: DataTypes.UUIDV1,
 		unique: true
 	},
+	email: {
+		type: Sequelize.STRING,
+		allowNull: false,
+		validate: {
+			notEmpty: true
+		}
+	},
 	username: {
 		type: Sequelize.STRING,
 		allowNull: false,

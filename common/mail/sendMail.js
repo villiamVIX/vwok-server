@@ -4,7 +4,7 @@ const nodemailer = require('nodemailer');
 let user = 'vwok-account@qq.com',
 	pass = 'tnogfbgzjtmaddcd' // vwok
 
-const Email = {
+const Email_Tool = {
 	config: {
 		host: "smtp.qq.com",
 		port: 465,
@@ -24,6 +24,6 @@ const Email = {
 	}
 };
 module.exports = {
-	Email,
+	Email_Tool,
 	user
 };

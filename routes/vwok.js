@@ -16,24 +16,27 @@ router.get('/woklist', async (req, res) => {
 
 	// res.send({user_works})
 	// 解构赋值 1是currenPage的默认值
-	let {
-		currentPage = 1, uid
-	} = req.query
+	
 	// console.log(currentPage)
-	let limit = 3
+	// let limit = 3
+	var {
+		currentPage = 1,
+		uid,
+		limit=4
+	} = req.query
 	let offset = (currentPage - 1) * limit;
 	let userList = await Main_Works.findAndCountAll({
 		//offet去掉前多少个数据
 		offset,
 		//limit每页数据数量
-		limit,
+		limit:Number(limit),
 		where: {
 			creater_id: uid
 		},
 		order: [
 			['updatedAt', 'DESC']
 		],
-		
+
 	}).then(data => {
 		// console.log(res)
 		let result = {};
