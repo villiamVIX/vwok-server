@@ -9,6 +9,12 @@ const sequelize = new Sequelize('vwok', 'root', 'zw11663', {
 		dateStrings: true,
 		typeCast: true
 	},
+	define: {
+		// 兼容存入中文
+	    charset: 'utf8',
+	    collate: 'utf8_general_ci', 
+	    timestamps: true
+	  },
 });
 
 sequelize
