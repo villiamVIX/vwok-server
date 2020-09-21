@@ -7,137 +7,121 @@ const fs = require('fs')
 const ejs = require('ejs')
 const path = require('path')
 const router = express.Router();
+
 // 邮箱模板
-const template = ejs.compile(fs.readFileSync(path.join(__dirname, '../common/mail/email.ejs'), 'utf8'));
+const template = ejs.compile(fs.readFileSync(path.join(__dirname, '../common/Mail_Tools/email.ejs'), 'utf8'));
+
+// 封装的查询工具
+const Sql_Tools = require('../common/Sql_Tools/Sql_Account.js')
+// 封装的邮件发送工具
+const {
+	Email_Tool, // 邮件工具类
+	Email_Master_User, // 发射邮箱账号
+	Send_Email_Tool // 邮件发射工具
+} = require('../common/Mail_Tools/Send_Mail.js');
+
+const {
+	Check_Verify // 验证码校验方法
+} =require('../common/Common_Tools/Check_Tools.js')
 
 
-
-const send_Email_Tool = async (mailOptions) => {
-	let {
-		Email_Tool
-	} = require('../common/mail/sendMail.js');
-
-	return Email_Tool.transporter.sendMail(mailOptions)
-}
-
-
-// 重置密码
-router.post('/email/forgot', async (req, res) => {
-	let {
-		Email_Tool,
-		user
-	} = require('../common/mail/sendMail.js');
+// 重置密码-邮箱验证
+router.post('/forgot/email', async (req, res) => {
 
 	let {
 		email
 	} = req.body; //前端发送来的验证邮箱
-
-	const user_Info = await Users.findOne({
-		where: {
-			email
-		}
+	
+// a返回一个布尔值  判断后决定是否发短信
+	let  a = Sql_Tools.Cheak_Email_Existed(res,email).then(data=>{
+		
 	})
-	if (!user_Info) {
-		return res.send({
-			code: 450,
-			msg: "该邮箱未注册"
-		})
-	}
+	
 
+		
 	// 数据持久化 便于验证
 	req.sessionStore.verify = Email_Tool.verify;
 	req.sessionStore.email = email;
-
+	console.log(req.sessionStore.verify)
 
 	const send_Email = async (request, response, next) => {
-
 
 		const html = template({
 			title: 'VWOK 密码重置',
 			verify: req.sessionStore.verify,
-			email
+			email,
+			motivation: '重置',
+			object: '密码'
 		});
 
 		const mailOptions = { //发送给用户显示的字段
-			from: `VWOK ${user}`,
+			from: `VWOK ${Email_Master_User}`,
 			to: email,
-			subject: '注册VWOK邮箱验证', // 邮件标题
+			subject: 'VWOK重置密码验证', // 邮件标题
 			html // ejs邮件模板
 		}
-		send_Email_Tool(mailOptions)
+		Send_Email_Tool(res,mailOptions)
 	};
 })
 
-
-
-router.post('/email', (req, res) => {
+// 重置密码
+router.post('/forgot/reset/password', async (req, res) => {
 	let {
-		Email_Tool,
-		user
-	} = require('../common/mail/sendMail.js');
+		email,
+		verify
+	} = req.body; //前端发送来的验证邮箱
+
+	let is_Verify_Right =Check_Verify(req, res, email, verify)
+	if(!is_Verify_Right) return false
+	
+})
+
+
+// 注册邮箱
+router.post('/register/email', (req, res) => {
 
 	let {
 		email
 	} = req.body; //前端发送来的验证邮箱
 
-	const cheak_Email_Existed = async (request, response, next) => {
-		const model = await Users.findOne({
-				where: {
-					email
-				}
-			}).then(data => {
-				if (data !== null)
-					return res.send({
-						msg: '邮箱已存在',
-						code: 450
-					})
-				//发邮件
-				send_Email()
+	Sql_Tools.Cheak_Email_Existed(email).then(data => {
+		if (data !== null)
+			return res.send({
+				msg: '邮箱已存在',
+				code: 450
 			})
-			.catch(err => {
-				res.send({
-					msg: '验证邮件是否存在失败',
-					code: 423
-				})
-			})
-	}
-	cheak_Email_Existed()
-
-
+		//发邮件
+		send_Email()
+	}).catch(err => {
+		res.send({
+			msg: '验证邮件是否注册失败',
+			code: 423
+		})
+	})
 
 	// 数据持久化 便于验证
 	req.sessionStore.verify = Email_Tool.verify;
 	req.sessionStore.email = email;
 
-	console.log(req.sessionStore.verify)
 
 	const send_Email = async (request, response, next) => {
 
 		const html = template({
 			title: 'VWOK 验证码',
 			verify: req.sessionStore.verify,
-			email
+			email,
+			motivation: '注册',
+			object: '账号'
 		});
 
 		const mailOptions = { //发送给用户显示的字段
-			from: `VWOK ${user}`,
+			from: `VWOK ${Email_Master_User}`,
 			to: email,
 			subject: '注册VWOK邮箱验证', // 邮件标题
 			html // ejs邮件模板
 		}
 
-		send_Email_Tool(mailOptions).then(data => {
-			console.log(data)
-			res.send({
-				msg: '验证码发射成功',
-				code: 200
-			})
-		}).catch(err => {
-			res.send({
-				code: 421,
-				msg: '发射失败，请检查邮箱',
-			})
-		})
+		Send_Email_Tool(res,mailOptions)
 	};
 })
 
@@ -153,16 +137,11 @@ router.post('/register', async (req, res) => {
 	console.log(req.body)
 
 	console.log(`存储的session验证码 ${req.sessionStore.verify} ---------- ${verify}`)
-
-
-	if (email !== req.sessionStore.email || verify !== req.sessionStore.verify) {
-		res.send({
-			msg: "验证码校验错误",
-			code: 422
-		});
-		return false
-	}
-
+	
+	
+	let is_Verify_Right =Check_Verify(req, res, email, verify)
+	if(!is_Verify_Right) return false
+	
 	let bcrypt_Password = bcrypt.hashSync(password, 5)
 
 	const model = await Users.findOne({
