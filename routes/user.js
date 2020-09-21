@@ -11,6 +11,16 @@ const router = express.Router();
 const template = ejs.compile(fs.readFileSync(path.join(__dirname, '../common/mail/email.ejs'), 'utf8'));
 
 
+
+const send_Email_Tool = async (mailOptions) => {
+	let {
+		Email_Tool
+	} = require('../common/mail/sendMail.js');
+
+	return Email_Tool.transporter.sendMail(mailOptions)
+}
+
+
 // 重置密码
 router.post('/email/forgot', async (req, res) => {
 	let {
@@ -43,7 +53,7 @@ router.post('/email/forgot', async (req, res) => {
 
 
 		const html = template({
-			title: 'VWOK 验证码',
+			title: 'VWOK 密码重置',
 			verify: req.sessionStore.verify,
 			email
 		});
@@ -54,23 +64,8 @@ router.post('/email/forgot', async (req, res) => {
 			subject: '注册VWOK邮箱验证', // 邮件标题
 			html // ejs邮件模板
 		}
-
-		const info = await Email_Tool.transporter.sendMail(mailOptions)
-			.then(data =>
-				res.send({
-					msg: '验证码发射成功',
-					code: 200
-				})
-			)
-			.catch(err => {
-				res.send({
-					code: 421,
-					msg: '发射失败，请检查邮箱',
-				})
-			})
+		send_Email_Tool(mailOptions)
 	};
-
-
 })
 
 
@@ -117,7 +112,7 @@ router.post('/email', (req, res) => {
 	console.log(req.sessionStore.verify)
 
 	const send_Email = async (request, response, next) => {
-		
+
 		const html = template({
 			title: 'VWOK 验证码',
 			verify: req.sessionStore.verify,
@@ -131,22 +126,19 @@ router.post('/email', (req, res) => {
 			html // ejs邮件模板
 		}
 
-		const info = await Email_Tool.transporter.sendMail(mailOptions)
-			.then(data =>
-				res.send({
-					msg: '验证码发射成功',
-					code: 200
-				})
-			)
-			.catch(err => {
-				res.send({
-					code: 421,
-					msg: '发射失败，请检查邮箱',
-				})
+		send_Email_Tool(mailOptions).then(data => {
+			console.log(data)
+			res.send({
+				msg: '验证码发射成功',
+				code: 200
 			})
+		}).catch(err => {
+			res.send({
+				code: 421,
+				msg: '发射失败，请检查邮箱',
+			})
+		})
 	};
-
-
 })
 
 
