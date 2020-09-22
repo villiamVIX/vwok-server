@@ -22,7 +22,7 @@ const {
 
 const {
 	Check_Verify // 验证码校验方法
-} =require('../common/Common_Tools/Check_Tools.js')
+} = require('../common/Common_Tools/Check_Tools.js')
 
 
 // 重置密码-邮箱验证
@@ -31,18 +31,22 @@ router.post('/forgot/email', async (req, res) => {
 	let {
 		email
 	} = req.body; //前端发送来的验证邮箱
-	
-// a返回一个布尔值  判断后决定是否发短信
-	let  a = Sql_Tools.Cheak_Email_Existed(res,email).then(data=>{
-		
-	})
-	
 
-		
+	// Sql_Tools.Cheak_Email_Existed(res,email)
+	// .then(data => { 
+	// 	//  发验证码 ： 没注册过也不用往下走
+	// 	data ?   send_Email() :null
+	// }).catch(err => {
+	// 	res.send({
+	// 		msg: '验证邮件是否注册失败',
+	// 		code: 423,
+	// 		err
+	// 	})
+	// })
+	
 	// 数据持久化 便于验证
 	req.sessionStore.verify = Email_Tool.verify;
 	req.sessionStore.email = email;
-	console.log(req.sessionStore.verify)
 
 	const send_Email = async (request, response, next) => {
 
@@ -60,7 +64,7 @@ router.post('/forgot/email', async (req, res) => {
 			subject: 'VWOK重置密码验证', // 邮件标题
 			html // ejs邮件模板
 		}
-		Send_Email_Tool(res,mailOptions)
+		Send_Email_Tool(res, mailOptions)
 	};
 })
 
@@ -71,9 +75,9 @@ router.post('/forgot/reset/password', async (req, res) => {
 		verify
 	} = req.body; //前端发送来的验证邮箱
 
-	let is_Verify_Right =Check_Verify(req, res, email, verify)
-	if(!is_Verify_Right) return false
-	
+	let is_Verify_Right = Check_Verify(req, res, email, verify)
+	if (!is_Verify_Right) return false
+
 })
 
 
@@ -83,27 +87,24 @@ router.post('/register/email', (req, res) => {
 	let {
 		email
 	} = req.body; //前端发送来的验证邮箱
-
-	Sql_Tools.Cheak_Email_Existed(email).then(data => {
-		if (data !== null)
-			return res.send({
-				msg: '邮箱已存在',
-				code: 450
-			})
-		//发邮件
-		send_Email()
+	
+	Sql_Tools.Cheak_Email_Existed(res,email)
+	.then(data => { 
+		// 注册过就不往下走 : 发射验证吗
+		data ?  null : send_Email()
 	}).catch(err => {
 		res.send({
 			msg: '验证邮件是否注册失败',
-			code: 423
+			code: 423,
+			err
 		})
 	})
 
 	// 数据持久化 便于验证
 	req.sessionStore.verify = Email_Tool.verify;
 	req.sessionStore.email = email;
-
-
+	
+	console.log(req.sessionStore.verify )
 	const send_Email = async (request, response, next) => {
 
 		const html = template({
@@ -121,7 +122,7 @@ router.post('/register/email', (req, res) => {
 			html // ejs邮件模板
 		}
 
-		Send_Email_Tool(res,mailOptions)
+		Send_Email_Tool(res, mailOptions)
 	};
 })
 
@@ -137,24 +138,30 @@ router.post('/register', async (req, res) => {
 	console.log(req.body)
 
 	console.log(`存储的session验证码 ${req.sessionStore.verify} ---------- ${verify}`)
-	
-	
-	let is_Verify_Right =Check_Verify(req, res, email, verify)
-	if(!is_Verify_Right) return false
-	
+
+
+	// let is_Verify_Right = Check_Verify(req, res, email, verify)
+	// if (!is_Verify_Right) return false
+
 	let bcrypt_Password = bcrypt.hashSync(password, 5)
 
-	const model = await Users.findOne({
-		where: {
-			email
+    Sql_Tools.Cheak_Email_Existed(res,email)
+    .then(data => { 
+		console.log(data)
+		if(data){
+			return false
 		}
-	})
-	if (model) {
-		return res.send({
-			code: 450,
-			msg: "邮箱已被占用"
-		})
-	}
+		user()
+    	// 注册过就不往下走 : 建号
+    	// data ?  null : user()
+    }).catch(err => {
+    	res.send({
+    		msg: '验证邮件是否注册失败',
+    		code: 423,
+    		err
+    	})
+    })
+
 	const user = await Users.create({
 		username,
 		email,
