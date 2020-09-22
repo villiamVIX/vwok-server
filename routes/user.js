@@ -32,18 +32,18 @@ router.post('/forgot/email', async (req, res) => {
 		email
 	} = req.body; //前端发送来的验证邮箱
 
-	// Sql_Tools.Cheak_Email_Existed(res,email)
-	// .then(data => { 
-	// 	//  发验证码 ： 没注册过也不用往下走
-	// 	data ?   send_Email() :null
-	// }).catch(err => {
-	// 	res.send({
-	// 		msg: '验证邮件是否注册失败',
-	// 		code: 423,
-	// 		err
-	// 	})
-	// })
-	
+	Sql_Tools.server_Cheak_User_Not_Existed(res,email)
+	.then(data => { 
+		//  发验证码 ： 没注册过也不用往下走
+		data ?   send_Email() :null
+	}).catch(err => {
+		res.send({
+			msg: '验证邮件是否注册失败',
+			code: 423,
+			err
+		})
+	})
+
 	// 数据持久化 便于验证
 	req.sessionStore.verify = Email_Tool.verify;
 	req.sessionStore.email = email;
@@ -72,39 +72,42 @@ router.post('/forgot/email', async (req, res) => {
 router.post('/forgot/reset/password', async (req, res) => {
 	let {
 		email,
-		verify
+		verify,
+		password
 	} = req.body; //前端发送来的验证邮箱
 
-	let is_Verify_Right = Check_Verify(req, res, email, verify)
-	if (!is_Verify_Right) return false
-
+	// let is_Verify_Right = Check_Verify(req, res, email, verify)
+	// if (!is_Verify_Right) return false
+	
+	Sql_Tools.Reset_Password(email,password)
+	
 })
 
 
-// 注册邮箱
+// 注册-邮箱验证
 router.post('/register/email', (req, res) => {
 
 	let {
 		email
 	} = req.body; //前端发送来的验证邮箱
-	
-	Sql_Tools.Cheak_Email_Existed(res,email)
-	.then(data => { 
-		// 注册过就不往下走 : 发射验证吗
-		data ?  null : send_Email()
-	}).catch(err => {
-		res.send({
-			msg: '验证邮件是否注册失败',
-			code: 423,
-			err
+
+	Sql_Tools.server_Cheak_User_Existed(res, email)
+		.then(data => {
+			// 注册过就不往下走 : 发射验证吗
+			data ? null : send_Email()
+		}).catch(err => {
+			res.send({
+				msg: '验证邮件是否注册失败',
+				code: 423,
+				err
+			})
 		})
-	})
 
 	// 数据持久化 便于验证
 	req.sessionStore.verify = Email_Tool.verify;
 	req.sessionStore.email = email;
-	
-	console.log(req.sessionStore.verify )
+
+	console.log(req.sessionStore.verify)
 	const send_Email = async (request, response, next) => {
 
 		const html = template({
@@ -135,49 +138,27 @@ router.post('/register', async (req, res) => {
 		verify,
 		email
 	} = req.body
-	console.log(req.body)
+	// console.log(`存储的session验证码 ${req.sessionStore.verify} ---------- ${verify}`)
 
-	console.log(`存储的session验证码 ${req.sessionStore.verify} ---------- ${verify}`)
-
-
-	// let is_Verify_Right = Check_Verify(req, res, email, verify)
-	// if (!is_Verify_Right) return false
+	let is_Verify_Right = Check_Verify(req, res, email, verify)
+	if (!is_Verify_Right) return false
 
 	let bcrypt_Password = bcrypt.hashSync(password, 5)
 
-    Sql_Tools.Cheak_Email_Existed(res,email)
-    .then(data => { 
-		console.log(data)
-		if(data){
-			return false
-		}
-		user()
-    	// 注册过就不往下走 : 建号
-    	// data ?  null : user()
-    }).catch(err => {
-    	res.send({
-    		msg: '验证邮件是否注册失败',
-    		code: 423,
-    		err
-    	})
-    })
-
-	const user = await Users.create({
-		username,
-		email,
-		password: bcrypt_Password
-	}).then(data => {
-		return res.send({
-			msg: '注册成功',
-			code: 200
+	Sql_Tools.server_Cheak_User_Existed(res, email)
+		.then(data => {
+			if (data) {
+				return false
+			}
+			// 新建用户
+			Sql_Tools.server_Create_User(res, username, email, bcrypt_Password)
+		}).catch(err => {
+			res.send({
+				msg: '验证邮件是否注册失败',
+				code: 423,
+				err
+			})
 		})
-	}).catch(err => {
-		return res.send({
-			msg: "注册失败，问开发者",
-			code: 451
-		})
-	})
-
 });
 
 // 登录 
