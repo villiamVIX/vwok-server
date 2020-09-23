@@ -32,23 +32,23 @@ const Reset_Password = async (email, password) => { // 重置密码
 				email
 			}
 		}
-
 	)
 	return User_Info
 }
+
 // ---------------------------------------------操作层
 
 const server_Reset_Password = async (res, email, bcrypt_Password) => { // 重置密码
 	let sql_data = await Reset_Password(username, email, bcrypt_Password)
 		.then(data => {
 			return res.send({
-				msg: '注册成功',
+				msg: '重置成功',
 				code: 200
 			})
 		}).catch(err => {
 			return res.send({
-				msg: "注册失败，检查数据",
-				code: 451
+				msg: "重置密码失败，检查数据",
+				code: 452
 			})
 		})
 }

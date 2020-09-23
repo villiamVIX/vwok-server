@@ -79,7 +79,7 @@ router.post('/forgot/reset/password', async (req, res) => {
 	// let is_Verify_Right = Check_Verify(req, res, email, verify)
 	// if (!is_Verify_Right) return false
 	
-	Sql_Tools.Reset_Password(email,password)
+	Sql_Tools.server_Reset_Password(res,email,password)
 	
 })
 
