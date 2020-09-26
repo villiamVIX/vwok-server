@@ -1,14 +1,17 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+const createError = require('http-errors');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
+const port = 3066
+const userRouter = require('./routes/user');
+const vwokRouter = require('./routes/vwok');
 
-var userRouter = require('./routes/user');
-var vwokRouter = require('./routes/vwok');
+// 中间件 - 登录校验
+const auth = require('./middlewares/auth/auth.js')
 
-var session = require('express-session');
-var app = express();
+const session = require('express-session');
+const app = express();
 
 
 app.all("*", function(req, res, next) {
@@ -30,6 +33,7 @@ app.all("*", function(req, res, next) {
 	if ("OPTIONS" === req.method) return res.sendStatus(200);
 	next();
 });
+
 
 // 配置session(需要配置在路由之前)
 app.use(session({
@@ -58,8 +62,10 @@ app.use(express.urlencoded({
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use('/', auth);
 app.use('/user', userRouter);
 app.use('/vwok', vwokRouter);
+
 
 require('./database/init.js')
 require('./database/models/Users.js')
@@ -83,5 +89,7 @@ app.use(function(err, req, res, next) {
 	res.render('error');
 });
 
+
+app.listen(port, console.log(`服务启动 端口${port}`))
 
 module.exports = app;
