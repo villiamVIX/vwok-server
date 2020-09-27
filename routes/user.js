@@ -93,7 +93,8 @@ router.post('/register/email', Check.Check_Exist, (req, res) => {
 router.post('/register', Check.Check_Verify, CTRL_User.Create_User)
 	
 // 登录 Check.Check_Not_Exist
-router.post('/login',CTRL_User.Login);
+router.post('/login',Check.Check_Not_Exist,CTRL_User.Login);
+
 
 // 自动登录模块 (搁置)
 router.post('/islogin', (req, res) => {
@@ -105,9 +106,6 @@ router.post('/islogin', (req, res) => {
 		uid
 	} = jwt.verify(token, TOKEN_SECRET)
 })
-
-
-
 
 
 

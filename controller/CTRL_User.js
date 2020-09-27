@@ -89,6 +89,7 @@ class CTRL_User {
 		next()
 	}
 	async Login(req, res, next) {
+		
 		try {
 			console.log(CTRL_User.Find_User_By_Email)
 			const User_Info = await CTRL_User.Find_User_By_Email(req, res)
@@ -128,5 +129,5 @@ class CTRL_User {
 	}
 
 }
+module.exports = new CTRL_User();
 
-export default new CTRL_User()
