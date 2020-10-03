@@ -11,7 +11,10 @@ const router = express.Router();
 const template = ejs.compile(fs.readFileSync(path.join(__dirname, '../common/Mail_Tools/email.ejs'), 'utf8'));
 
 // 数据操作层
-const CTRL_User = require('../controller/CTRL_User')
+import CTRL_User from "../controller/CTRL_User.js";
+
+// 校验层
+import Check from '../middlewares/check/check.js'
 
 // 封装的邮件发送工具
 const {
@@ -20,8 +23,6 @@ const {
 	Send_Email_Tool // 邮件发射工具
 } = require('../common/Mail_Tools/Send_Mail.js');
 
-
-const Check = require('../middlewares/check/check.js')
 
 // 重置密码-邮箱验证
 router.post('/forgot/email', Check.Check_Not_Exist, async (req, res) => {
@@ -34,7 +35,7 @@ router.post('/forgot/email', Check.Check_Not_Exist, async (req, res) => {
 	req.sessionStore.verify = Email_Tool.verify;
 	req.sessionStore.email = email;
 
-
+	console.log(`重置密码验证码:${req.sessionStore.verify}`);
 	const html = template({
 		title: 'VWOK 密码重置',
 		verify: req.sessionStore.verify,
@@ -95,18 +96,18 @@ router.post('/register', Check.Check_Verify, CTRL_User.Create_User)
 // 登录 Check.Check_Not_Exist
 router.post('/login',Check.Check_Not_Exist,CTRL_User.Login);
 
-
 // 自动登录模块 (搁置)
 router.post('/islogin', (req, res) => {
 	let {
 		token
 	} = req.headers
 
-	const {
-		uid
-	} = jwt.verify(token, TOKEN_SECRET)
+	// const {
+	// 	uid
+	// } = jwt.verify(token, TOKEN_SECRET)
 })
 
 
 
 module.exports = router;
+// export default router
