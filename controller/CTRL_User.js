@@ -77,8 +77,9 @@ class CTRL_User {
   async Login(req, res, next) {
     try {
       // that 改变this指向
-      const User_Info = await that.Find_User_By_Email(req, res);
-      let { password, uid, email } = User_Info.dataValues;
+      const User_Data = await that.Find_User_By_Email(req, res);
+      let User_Info = User_Data.dataValues;
+      let { password, uid, email } = User_Info;
 
       const check_password = bcrypt.compareSync(req.body.password, password);
 
@@ -94,13 +95,13 @@ class CTRL_User {
         password,
         uid,
       };
-      let jwt = new Auth_Jwt(Jwt_User_Info); // 调用jwt方法
-      let token = jwt.Create_Token(); //生成jwt
 
+      let jwt = new Auth_Jwt(Jwt_User_Info); // 调用jwt方法
+      User_Info.token = jwt.Create_Token(); //生成jwt
       return res.send({
         msg: "登录成功",
         code: 200,
-        token,
+        User_Info,
       });
     } catch (e) {
       return res.send({
