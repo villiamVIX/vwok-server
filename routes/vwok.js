@@ -3,52 +3,11 @@ const Main_Works = require('../database/models/Main_Works.js')
 const Users = require('../database/models/Users.js')
 const router = express.Router();
 
-router.get('/woklist', async (req, res) => {
-	// let {uid} = req.query
-	// console.log(uid)
-	// const user_works = await Main_Works.findAll({
-	// 	where: {
-	// 		creater_id:uid
-	// 	},
-	// 	// DESC从大到小排序
-	// 	order: [[ 'updatedAt', 'DESC' ]],
-	// })
 
-	// res.send({user_works})
-	// 解构赋值 1是currenPage的默认值
-	
-	// console.log(currentPage)
-	// let limit = 3
-	var {
-		currentPage = 1,
-		uid,
-		limit=4
-	} = req.query
-	let offset = (currentPage - 1) * limit;
-	let userList = await Main_Works.findAndCountAll({
-		//offet去掉前多少个数据
-		offset,
-		//limit每页数据数量
-		limit:Number(limit),
-		where: {
-			creater_id: uid
-		},
-		order: [
-			['updatedAt', 'DESC']
-		],
+// 数据操作层
+import CTRL_Vwok from "../controller/CTRL_Vwok.js";
 
-	}).then(data => {
-		// console.log(res)
-		let result = {};
-		result.data = data.rows;
-		result.total = data.count;
-		res.send({
-			result
-		})
-		return result;
-	});
-	// ctx.body = userList;
-});
+router.get('/woklist', CTRL_Vwok.Get_WorkList);
 
 
 router.post('/create', async (req, res) => {
