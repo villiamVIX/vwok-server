@@ -9,7 +9,7 @@ function is_Token_Ok(req) {
   let isLogin = jwt.Verify_Token(); //校验jwt
   return isLogin;
 }
-
+ 
 router.all(/^\/vwok/, async (req, res, next) => {
   const isLogin = is_Token_Ok(req);
 
