@@ -166,20 +166,31 @@ router.post("/forgot/reset/password",Check.Check_Verify,CTRL_User.Reset_Password
  *    "msg": "登录成功",
  *    "code": 200,
  *    "token": "..PUNGdMxVQDJpLoT3......."
+ *    "UserInfo" : {用户信息}
  *  }
  * @apiSampleRequest /user/login
  * @apiVersion 0.1.1
  */
 router.post("/login", Check.Check_Not_Exist, CTRL_User.Login);
 
-// 自动登录模块 (搁置)
-router.post("/islogin", (req, res) => {
-  let { token } = req.headers;
+/**
+ * @api {post} /user/autologin 自动登录
+ * @apiDescription 自动登录
+ * @apiName autologin
+ * @apiGroup 用户
+ * @apiParam {string} token token码
+ * @apiSuccess {json} result
+ * @apiSuccessExample {json} Success-Response:
+ * {
+ *    "msg": "登录成功",
+ *    "code": 200,
+ *    "token": "..PUNGdMxVQDJpLoT3......."
+ *  }
+ * @apiSampleRequest /user/autologin
+ * @apiVersion 0.1.1
+ */
+router.post("/autologin", CTRL_User.Auto_Login);
 
-  // const {
-  // 	uid
-  // } = jwt.verify(token, TOKEN_SECRET)
-});
 
 module.exports = router;
 // export default router

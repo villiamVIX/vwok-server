@@ -3,7 +3,7 @@ const express = require("express");
 const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
-const port = 3066;
+const port = 4009;
 const userRouter = require("./routes/user");
 const vwokRouter = require("./routes/vwok");
 
@@ -105,8 +105,13 @@ app.use(function (err, req, res, next) {
   res.render("error");
 });
 
-
-
-app.listen(port, console.log(`服务启动 端口${port}`));
+app.listen(
+  port,
+  console.log(`
+                        #############################
+                        服务启动 端口${port}
+                        #############################
+ `)
+);
 
 module.exports = app;

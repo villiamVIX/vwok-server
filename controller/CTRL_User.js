@@ -97,17 +97,26 @@ class CTRL_User {
       };
 
       let jwt = new Auth_Jwt(Jwt_User_Info); // 调用jwt方法
-      User_Info.token = jwt.Create_Token(); //生成jwt
+      let Token = jwt.Create_Token(); //生成jwt
       return res.send({
         msg: "登录成功",
         code: 200,
-        User_Info,
+        Token,
+        User_Info
       });
     } catch (e) {
       return res.send({
         msg: "校验密码失败，检查数据",
         code: 604,
       });
+    }
+  }
+
+  async Auto_Login(req, res, next) {
+    try {
+      console.log(req.headers);
+    } catch (error) {
+      
     }
   }
 }

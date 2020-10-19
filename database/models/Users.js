@@ -39,7 +39,7 @@ const Users = sequelize.define('user', {
 
 Users.sync({ alter: true }).then(() => {
 	// 建表
-	console.log('表模型同步')
+	console.log('Users表模型同步')
 })
 
 module.exports = Users

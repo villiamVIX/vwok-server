@@ -14,22 +14,23 @@ class Jwt_Util {
   }
   Verify_Token() {
     let token = this.User_Info;
-    var msg;
+    var res;
     try {
       let result = jwt.verify(token, TOKEN_SECRET, (err, decoded) => {
         if (err) {
           if (err.name === "TokenExpiredError") {
             console.log("token过期，重登！");
-            msg = "Token_Time_Out";
+            res.msg = "Token_Time_Out";
           } else {
             console.log("token有问题");
-            msg = "Token_Error";
+            res.msg = "Token_Error";
           }
         }else{
-          msg='Been_Login'
+          res.data = decoded
+          res.msg='Been_Login'
         }
       });
-      return msg;
+      return res;
     } catch (error) {
       return error;
     }

@@ -9,6 +9,7 @@ class CTRL_Vwok {
   async Get_WorkList(req, res) {
     try {
       var { currentPage = 1, uid, limit = 10 } = req.query;
+      console.log(uid);
       let offset = (currentPage - 1) * limit;
       let userList = await Main_Works.findAndCountAll({
         //offet去掉前多少个数据
