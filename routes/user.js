@@ -174,9 +174,9 @@ router.post("/forgot/reset/password",Check.Check_Verify,CTRL_User.Reset_Password
 router.post("/login", Check.Check_Not_Exist, CTRL_User.Login);
 
 /**
- * @api {post} /user/autologin 自动登录
- * @apiDescription 自动登录
- * @apiName autologin
+ * @api {post} /user/tokenlogin token自动登录
+ * @apiDescription token自动登录
+ * @apiName tokenlogin
  * @apiGroup 用户
  * @apiParam {string} token token码
  * @apiSuccess {json} result
@@ -186,11 +186,10 @@ router.post("/login", Check.Check_Not_Exist, CTRL_User.Login);
  *    "code": 200,
  *    "token": "..PUNGdMxVQDJpLoT3......."
  *  }
- * @apiSampleRequest /user/autologin
+ * @apiSampleRequest /user/tokenlogin
  * @apiVersion 0.1.1
  */
-router.post("/autologin", CTRL_User.Auto_Login);
-
+router.post("/tokenlogin", CTRL_User.Token_Login);
 
 module.exports = router;
 // export default router

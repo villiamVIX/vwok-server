@@ -102,7 +102,7 @@ class CTRL_User {
         msg: "登录成功",
         code: 200,
         Token,
-        User_Info
+        User_Info,
       });
     } catch (e) {
       return res.send({
@@ -112,13 +112,32 @@ class CTRL_User {
     }
   }
 
-  async Auto_Login(req, res, next) {
+  async Token_Login(req, res, next) {
     try {
-      console.log(req.headers);
+      let token = req.headers.authorization;
+      let jwt = new Auth_Jwt(token); // 调用jwt方法
+      let isLogin = jwt.Verify_Token(); //校验jwt
+
+      if (isLogin.msg == "Been_Login") {
+        let { email } = isLogin.data;
+        const User_Info = await Users.findOne({ where: { email } });
+
+        return res.send({
+          msg: "自动登录成功",
+          code: 200,
+          User_Info,
+        });
+      } else {
+        return res.status(606).send({ msg: isLogin.msg });
+      }
     } catch (error) {
-      
+      return res.send({
+        msg: "自动登录失败，检查数据",
+        code: 605,
+      });
     }
   }
+
 }
 
 export default new CTRL_User();

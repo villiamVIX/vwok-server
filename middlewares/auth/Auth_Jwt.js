@@ -14,9 +14,9 @@ class Jwt_Util {
   }
   Verify_Token() {
     let token = this.User_Info;
-    var res;
+    var res={};
     try {
-      let result = jwt.verify(token, TOKEN_SECRET, (err, decoded) => {
+      let result = jwt.verify(token, TOKEN_SECRET, (err, payload) => {
         if (err) {
           if (err.name === "TokenExpiredError") {
             console.log("token过期，重登！");
@@ -25,11 +25,12 @@ class Jwt_Util {
             console.log("token有问题");
             res.msg = "Token_Error";
           }
-        }else{
-          res.data = decoded
-          res.msg='Been_Login'
+        } else {
+          res.data = payload;
+          res.msg = "Been_Login";
         }
       });
+      console.log(res)
       return res;
     } catch (error) {
       return error;
