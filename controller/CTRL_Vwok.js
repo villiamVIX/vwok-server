@@ -17,7 +17,7 @@ class CTRL_Vwok {
         //limit每页数据数量
         limit: Number(limit),
         where: {
-          creater_id: uid,
+           uid,
         },
         order: [["updatedAt", "DESC"]],
       });

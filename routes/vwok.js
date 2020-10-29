@@ -15,9 +15,13 @@ router.post('/create', async (req, res) => {
 		wok_name,
 		start_time,
 		estimate_time,
-		creater_name
+		creater_name，
+		uid
 	} = req.body
-	console.log(req.body)
+
+
+
+	console.log(ss)
 	console.log('数据' + wok_name,
 		start_time,
 		estimate_time,

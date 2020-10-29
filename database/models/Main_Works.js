@@ -23,7 +23,7 @@ const Main_Works = sequelize.define('Main_Works', {
 		},
 		comment: '创建人名称'
 	},
-	creater_id: {
+	uid: {
 		type: DataTypes.UUID,
 		allowNull: true,
 		validate: {
