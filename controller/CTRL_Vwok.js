@@ -6,7 +6,8 @@ class CTRL_Vwok {
   constructor() {
     that = this;
   }
-  async Get_WorkList(req, res) {
+  // 查询个人工项
+  async Get_WokList(req, res) {
     try {
       var { currentPage = 1, uid, limit = 10 } = req.query;
       console.log(uid);
@@ -17,7 +18,7 @@ class CTRL_Vwok {
         //limit每页数据数量
         limit: Number(limit),
         where: {
-           uid,
+          uid,
         },
         order: [["updatedAt", "DESC"]],
       });
@@ -32,6 +33,31 @@ class CTRL_Vwok {
         msg: "查询工作列表失败",
         code: 700,
       });
+    }
+  }
+  // 新建工项
+  async Create_Wok(req, res) {
+    try {
+      let { wok_name, start_time, estimate_time, creater_name, uid ,teammate} = req.body;
+      teammate = teammate.toString()
+      console.log(req.body);
+      const main_works = await Main_Works.create({
+        wok_name,
+        start_time,
+        estimate_time,
+        teammate,
+        creater_name,
+        uid
+      });
+
+      console.log(main_works);
+      if (main_works.dataValues) {
+        return res.send({ msg: "新建工项成功", code: 200 });
+      } else {
+        return res.send({ msg: "新建工项失败", code: 702 });
+      }
+    } catch (error) {
+      return res.send({ msg: "新建工项出错", code: 701 });
     }
   }
 }

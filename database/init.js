@@ -1,5 +1,8 @@
 const Sequelize = require("sequelize");
+// const host = "v.coderv.cn";
+// const host = "localhost";
 const host = "8.129.33.2";
+
 const sequelize = new Sequelize("vwok", "root", "zw11663", {
   host,
   dialect: "mysql",

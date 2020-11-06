@@ -58,6 +58,12 @@ const Main_Works = sequelize.define('Main_Works', {
 		validate: {
 			notEmpty: true
 		},
+		get(){
+            return this.getDataValue('teammate').split(',');
+        },
+        set(value){
+            return this.setDataValue('teammate',value.join(','))
+        },
 		comment: '参与团队人员'
 	},
 	total_progress: {
