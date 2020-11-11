@@ -1,12 +1,11 @@
 const Sequelize = require("sequelize");
-// const host = "v.coderv.cn";
+const host = "v.coderv.cn";
 // const host = "localhost";
-const host = "8.129.33.2";
 
-const sequelize = new Sequelize("vwok", "root", "zw11663", {
+const sequelize = new Sequelize("Vwok", "root", "zw11663", {
   host,
   dialect: "mysql",
-  port: "3306",
+  port: "33060",
   // 改时区
   timezone: "+08:00",
   dialectOptions: {
@@ -25,9 +24,9 @@ sequelize
   .authenticate()
   .then(() => {
     console.log(`
-		        #############################
-		        成功连接到数据库，地址: ${host}
-		        #############################
+		                  ##########################################################
+		                      成功连接到数据库，地址: ${host}
+		                  ##########################################################
 		`);
   })
   .catch((err) => {

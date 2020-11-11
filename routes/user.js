@@ -1,6 +1,6 @@
 const express = require("express");
 
-const Users = require("../database/models/Users.js");
+const vw_users = require("../database/models/vw_users.js");
 const fs = require("fs");
 const ejs = require("ejs");
 const path = require("path");

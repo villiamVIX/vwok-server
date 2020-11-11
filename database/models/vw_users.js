@@ -4,9 +4,9 @@ const {
 } = require('../init.js')
 
 const DataTypes = require('sequelize/lib/data-types');
+const db_Name = 'vw_users'
 
-
-const Users = sequelize.define('user', {
+const vw_users = sequelize.define(db_Name, {
 	uid: {
 		type: DataTypes.UUID,
 		allowNull: false,
@@ -37,9 +37,9 @@ const Users = sequelize.define('user', {
 	},
 })
 
-Users.sync({ alter: true }).then(() => {
+vw_users.sync({ alter: true }).then(() => {
 	// 建表
-	console.log('Users表模型同步')
+	console.log(`${db_Name}表模型同步`)
 })
 
-module.exports = Users
+module.exports = vw_users

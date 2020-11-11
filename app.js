@@ -3,7 +3,7 @@ const express = require("express");
 const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
-const port = 4009;
+const port = 3009;
 const userRouter = require("./routes/user");
 const vwokRouter = require("./routes/vwok");
 
@@ -88,8 +88,8 @@ app.use("/user", userRouter);
 app.use("/vwok", vwokRouter);
 
 require("./database/init.js");
-require("./database/models/Users.js");
-require("./database/models/Main_Works.js");
+require("./database/models/vw_users.js");
+require("./database/models/vw_works.js");
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
@@ -110,9 +110,9 @@ app.use(function (err, req, res, next) {
 app.listen(
   port,
   console.log(`
-                        #############################
-                        服务启动 端口${port}
-                        #############################
+                                              #############################
+                                               服务启动 端口${port}
+                                              #############################
  `)
 );
 

@@ -1,6 +1,6 @@
 import express from "express"; // ?
 const router = express.Router(); // 路由
-const Users = require("../../database/models/Users.js"); //数据库
+const vw_users = require("../../database/models/vw_users.js"); //数据库
 import Auth_Jwt from "../../middlewares/auth/Auth_Jwt";
 
 function is_Token_Ok(req) {

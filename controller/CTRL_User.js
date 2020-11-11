@@ -1,4 +1,4 @@
-import Users from "../database/models/Users.js";
+import vw_users from "../database/models/vw_users.js";
 import bcrypt from "bcrypt";
 import Auth_Jwt from "../middlewares/auth/Auth_Jwt";
 
@@ -10,7 +10,7 @@ class CTRL_User {
   async Find_User_By_Email(req, res) {
     try {
       let { email } = req.body;
-      const Account_Info = await Users.findOne({
+      const Account_Info = await vw_users.findOne({
         where: {
           email,
         },
@@ -27,7 +27,7 @@ class CTRL_User {
     try {
       let { username, email, password } = req.body;
 
-      const User_Info = await Users.create({
+      const User_Info = await vw_users.create({
         username,
         email,
         password: bcrypt.hashSync(password, 5),
@@ -55,7 +55,7 @@ class CTRL_User {
         password: bcrypt.hashSync(password, 5), // 加密
       };
 
-      const User_Info = await Users.update(newpsw, {
+      const User_Info = await vw_users.update(newpsw, {
         where: {
           email,
         },
@@ -120,15 +120,16 @@ class CTRL_User {
 
       if (isLogin.msg == "Been_Login") {
         let { email } = isLogin.data;
-        const User_Info = await Users.findOne({ where: { email } });
-
-        return res.send({
-          msg: "自动登录成功",
-          code: 200,
-          User_Info,
-        });
-      } else {
-        return res.status(606).send({ msg: isLogin.msg });
+        const User_Info = await vw_users.findOne({ where: { email } });
+        if (User_Info == null) {
+          return res.status(401).send({ msg: isLogin.msg });
+        } else {
+          return res.send({
+            msg: "自动登录成功",
+            code: 200,
+            User_Info,
+          });
+        }
       }
     } catch (error) {
       return res.send({
@@ -137,7 +138,6 @@ class CTRL_User {
       });
     }
   }
-
 }
 
 export default new CTRL_User();
