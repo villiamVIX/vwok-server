@@ -8,6 +8,9 @@ import CTRL_Vwok from "../controller/CTRL_Vwok.js";
 
 router.get("/woklist", CTRL_Vwok.Get_WokList);
 
+router.get("/teammate", CTRL_Vwok.Get_TeammateList);
+
 router.post("/create",CTRL_Vwok.Create_Wok);
+
 
 module.exports = router;

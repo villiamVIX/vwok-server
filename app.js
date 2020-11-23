@@ -6,6 +6,8 @@ const logger = require("morgan");
 const port = 3009;
 const userRouter = require("./routes/user");
 const vwokRouter = require("./routes/vwok");
+const vwokItemRouter = require("./routes/vwok_item");
+
 
 // 中间件 - 登录校验
 const auth = require("./middlewares/auth/auth.js");
@@ -31,28 +33,6 @@ app.all("*", (req, res, next) => {
   }
 });
 
-// app.all("*", function(req, res, next) {
-// 	var orginList = [
-// 		"http://192.168.1.104:8080",
-// 		"http://192.168.1.102:8080",
-// 		"http://192.168.1.103:3009",
-//     "http://192.168.1.105:8080",
-//     "http://localhost:3009"
-    
-// 	]
-// 	if (orginList.includes(req.headers.origin)) {
-// 		//设置允许跨域的域名，*代表允许任意域名跨域
-// 		res.header("Access-Control-Allow-Origin", req.headers.origin);
-// 	}
-// 	// res.clearCookie('id')
-// 	// res.cookie(prop, '', {expires: new Date(0)});
-// 	res.set("Access-Control-Allow-Methods", "POST,GET,DELETE,PUT");
-// 	res.set("Access-Control-Allow-Headers", "X-Requested-With, Content-Type");
-// 	res.set("Access-Control-Allow-Credentials", true);
-// 	// res.set('Access-Control-Allow-Max-Age', 3600);
-// 	if ("OPTIONS" === req.method) return res.sendStatus(200);
-// 	next();
-// });
 
 // 配置session(需要配置在路由之前)
 app.use(
@@ -86,10 +66,14 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/", auth);
 app.use("/user", userRouter);
 app.use("/vwok", vwokRouter);
+app.use("/vwok/item", vwokItemRouter);
+
 
 require("./database/init.js");
 require("./database/models/vw_users.js");
 require("./database/models/vw_works.js");
+require("./database/models/subs/vw_works_items.js");
+
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

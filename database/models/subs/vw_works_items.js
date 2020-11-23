@@ -1,34 +1,31 @@
-const { Sequelize, sequelize } = require("../init.js");
+const { Sequelize, sequelize } = require("../../init");
 
 const DataTypes = require("sequelize/lib/data-types");
-const db_Name = "vw_works";
+const db_Name = "vw_works_items";
 
-const vw_works = sequelize.define(db_Name, {
-  vwok_id: {
+const vw_works_items = sequelize.define(db_Name, {
+  vwok_item_id: {
     type: DataTypes.UUID,
     allowNull: false,
     primaryKey: true,
     defaultValue: DataTypes.UUIDV1,
     unique: true,
-    comment: "主任务id主键",
+    comment: "子任务id主键",
   },
-  creater_name: {
-    type: Sequelize.STRING,
+  vwok_id: {
+    type: DataTypes.STRING,
     allowNull: false,
-    validate: {
-      notEmpty: true,
-    },
-    comment: "创建人名称",
+    comment: "主任务id",
   },
   uid: {
     type: DataTypes.UUID,
-    allowNull: true,
+    allowNull: false,
     validate: {
       notEmpty: true,
     },
     comment: "创建人id",
   },
-  wok_name: {
+  vwok_item_name: {
     type: Sequelize.STRING,
     allowNull: false,
     validate: {
@@ -37,8 +34,9 @@ const vw_works = sequelize.define(db_Name, {
     comment: "任务名",
   },
   start_time: {
-	type: Sequelize.DATEONLY,
-	allowNull: false,
+    type: Sequelize.DATEONLY,
+    defaultValue: new Date(),
+    allowNull: false,
     validate: {
       notEmpty: true,
     },
@@ -51,40 +49,37 @@ const vw_works = sequelize.define(db_Name, {
     },
     comment: "预计完成时间",
   },
-  teammate: {
-	type: Sequelize.STRING,
-    validate: {
-      notEmpty: true,
-	},
-	// allowNull: false,
-    // get() {
-	//   return this.getDataValue("teammate").split(",");
-    // },
-    // set(value) {
-	// 	if(Array.isArray(value)){
-	// 		return this.setDataValue("teammate", value.join(","));
-	// 	}
-	// 	console.log(value)
-	// 	return this.getDataValue("teammate")
-    // },
-    comment: "参与团队人员",
-  },
-  total_progress: {
+  jira: {
     type: Sequelize.STRING,
     validate: {
       notEmpty: true,
     },
-    comment: "总进度",
+    comment: "jira单",
+  },
+  progress: {
+    type: Sequelize.STRING,
+    validate: {
+      notEmpty: true,
+    },
+    comment: "子任务进度",
+  },
+  remark: {
+    type: Sequelize.STRING,
+    validate: {
+      notEmpty: true,
+    },
+    comment: "备注",
   },
 });
 
-vw_works
+vw_works_items
   .sync({
     alter: true,
+    // force:true
   })
   .then(() => {
     // 建表
     console.log(`${db_Name}表模型同步`);
   });
 
-module.exports = vw_works;
+module.exports = vw_works_items;

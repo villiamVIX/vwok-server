@@ -10,20 +10,17 @@ class CTRL_Vwok {
   async Get_WokList(req, res) {
     try {
       var { currentPage = 1, uid, limit = 10 } = req.query;
-      console.log(uid);
       let offset = (currentPage - 1) * limit;
-      let userList = await vw_works.findAndCountAll({
+      let wokList = await vw_works.findAndCountAll({
         //offet去掉前多少个数据
         offset,
         //limit每页数据数量
         limit: Number(limit),
-        where: {
-          uid,
-        },
+        where: { uid },
         order: [["updatedAt", "DESC"]],
       });
 
-      let { rows, count } = userList;
+      let { rows, count } = wokList;
       let { data, total } = { data: rows, total: count };
       let result = { data, total };
 
@@ -35,28 +32,49 @@ class CTRL_Vwok {
       });
     }
   }
+  // 查询团队成员
+  async Get_TeammateList(req, res) {
+    try {
+      let userList = await vw_users.findAll({
+        attributes: ["uid", "username"],
+      });
+
+      res.send({ code: 200, result: userList });
+    } catch (error) {
+      return res.send({
+        msg: "获取团队成员失败",
+        code: 703,
+      });
+    }
+  }
   // 新建工项
   async Create_Wok(req, res) {
     try {
-      let { wok_name, start_time, estimate_time, creater_name, uid ,teammate} = req.body;
-      teammate = teammate.toString()
-      console.log(req.body);
+      let {
+        wok_name,
+        start_time,
+        estimate_time,
+        creater_name,
+        uid,
+        teammate,
+      } = req.body;
+      // 对队友字段做转换
+      if(Array.isArray(teammate)){
+        teammate = teammate.join(",")
+      }
+
       const main_works = await vw_works.create({
         wok_name,
         start_time,
         estimate_time,
-        teammate,
         creater_name,
-        uid
+        uid,
+        teammate,
       });
-
-      console.log(main_works);
-      if (main_works.dataValues) {
-        return res.send({ msg: "新建工项成功", code: 200 });
-      } else {
-        return res.send({ msg: "新建工项失败", code: 702 });
-      }
+      console.log(main_works.dataValues);
+      return res.send({ msg: "新建工项成功", code: 200 });
     } catch (error) {
+      console.log(error);
       return res.send({ msg: "新建工项出错", code: 701 });
     }
   }
