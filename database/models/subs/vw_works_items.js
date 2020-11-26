@@ -63,6 +63,20 @@ const vw_works_items = sequelize.define(db_Name, {
     },
     comment: "子任务进度",
   },
+  scroll_estimate: {
+    type: Sequelize.INTEGER,
+    validate: {
+      notEmpty: true,
+    },
+    comment: "滑动条预计进度",
+  },
+  scroll_actual: {
+    type: Sequelize.INTEGER,
+    validate: {
+      notEmpty: true,
+    },
+    comment: "滑动条实际进度",
+  },
   remark: {
     type: Sequelize.STRING,
     validate: {
@@ -75,7 +89,7 @@ const vw_works_items = sequelize.define(db_Name, {
 vw_works_items
   .sync({
     alter: true,
-    // force:true
+    // force: true,
   })
   .then(() => {
     // 建表
