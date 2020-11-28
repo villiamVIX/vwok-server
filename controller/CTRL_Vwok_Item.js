@@ -54,19 +54,33 @@ class CTRL_Vwok_Item {
     }
   }
   // 更新工项
-  async Update_Wok_Item(req, res) { // 更新未生效
-    let vwok_item_id = "d60a1190-2bd3-11eb-b4d2-a902bbce58cd3";
-    let vwok_item_name = "aiskdjoa打撒送到家了";
-    const wok_item = await vw_works_items.update(
-      {
-        vwok_item_name: "test2",
-      },
-      {
-        where: { vwok_item_id: vwok_item_id },
-      }
-    );
-    return res.send({ wok_item, code: 200 });
+  async Update_Wok_Item(req, res) {
+    console.log(req.body);
     try {
+      // let {
+      //   vwok_item_name,
+      //   jira,
+      //   scroll_estimate,
+      //   scroll_actual,
+      //   vwok_item_id,
+      //   remark,
+      // } = req.body;
+
+      const wok_item = await vw_works_items.bulkCreate(req.body,
+        {validate: true}, {updateOnDuplicate:'vwok_item_name'});
+      // const wok_item = await vw_works_items.update(
+      //   {
+      //     {vwok_item_name:'567jhtjttjtthj'}
+      //     // , jira,scroll_estimate,scroll_actual,remark
+      //   },
+      //   {
+      //     where: { vwok_item_id:[
+      //       'bc3cd720-2ffc-11eb-b23e-790369e505db',
+      //       'a246b8e0-2ffc-11eb-b23e-790369e505db'
+      //     ] },
+      //   }
+      // );
+      return res.send({ wok_item, code: 200 });
     } catch (error) {}
   }
 }
