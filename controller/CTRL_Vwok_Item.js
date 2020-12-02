@@ -46,8 +46,9 @@ class CTRL_Vwok_Item {
         uid,
         vwok_id,
       });
-      console.log(wok_item.dataValues);
-      return res.send({ msg: "新建子工项成功", code: 200 });
+      let new_items = await vw_works_items.findAll({ where: { vwok_id } });
+
+      return res.send({ result: new_items, msg: "新建子工项成功", code: 200 });
     } catch (error) {
       console.log(error);
       return res.send({ msg: "新建子工项出错", code: 702 });
@@ -55,33 +56,23 @@ class CTRL_Vwok_Item {
   }
   // 更新工项
   async Update_Wok_Item(req, res) {
-    console.log(req.body);
     try {
-      // let {
-      //   vwok_item_name,
-      //   jira,
-      //   scroll_estimate,
-      //   scroll_actual,
-      //   vwok_item_id,
-      //   remark,
-      // } = req.body;
+      let { vwok_id } = req.body[0]; // 子工项上一级ID
+      let data_Len = req.body.length;
+      for (let i = 0; i < data_Len; i++) {
+        let current_Id = req.body[i].vwok_item_id;
+        let current_Data = req.body[i];
+        console.log(current_Id);
+        await vw_works_items.update(current_Data, {
+          where: { vwok_item_id: current_Id },
+        });
+      }
+      let new_items = await vw_works_items.findAll({ where: { vwok_id } });
 
-      const wok_item = await vw_works_items.bulkCreate(req.body,
-        {validate: true}, {updateOnDuplicate:'vwok_item_name'});
-      // const wok_item = await vw_works_items.update(
-      //   {
-      //     {vwok_item_name:'567jhtjttjtthj'}
-      //     // , jira,scroll_estimate,scroll_actual,remark
-      //   },
-      //   {
-      //     where: { vwok_item_id:[
-      //       'bc3cd720-2ffc-11eb-b23e-790369e505db',
-      //       'a246b8e0-2ffc-11eb-b23e-790369e505db'
-      //     ] },
-      //   }
-      // );
-      return res.send({ wok_item, code: 200 });
-    } catch (error) {}
+      return res.send({ result: new_items, code: 200 });
+    } catch (error) {
+      return res.send({ msg: "更新工项出错", code: 705 });
+    }
   }
 }
 
