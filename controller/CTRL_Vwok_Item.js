@@ -11,7 +11,10 @@ class CTRL_Vwok_Item {
   async Get_Item(req, res) {
     try {
       let { vwok_id } = req.query;
-      let wokList = await vw_works_items.findAll({ where: { vwok_id } });
+      let wokList = await vw_works_items.findAll({
+        where: { vwok_id },
+        order: [["createdAt", "DESC"]],
+      });
       res.send({ code: 200, result: wokList });
     } catch (error) {
       console.log(error);
@@ -57,7 +60,7 @@ class CTRL_Vwok_Item {
   // 更新工项
   async Update_Wok_Item(req, res) {
     try {
-      let { vwok_id } = req.body[0]; // 子工项上一级ID
+      let { vwok_id } = req.body[0]; // 获取子工项上一级ID
       let data_Len = req.body.length;
       for (let i = 0; i < data_Len; i++) {
         let current_Id = req.body[i].vwok_item_id;
@@ -67,13 +70,26 @@ class CTRL_Vwok_Item {
           where: { vwok_item_id: current_Id },
         });
       }
-      let new_items = await vw_works_items.findAll({ where: { vwok_id } });
+      let new_items = await vw_works_items.findAll({
+        where: { vwok_id },
+        order: [["createdAt", "DESC"]],
+      });
 
       return res.send({ result: new_items, code: 200 });
     } catch (error) {
       return res.send({ msg: "更新工项出错", code: 705 });
     }
   }
+  // 通过Vwok_id获取子工项
+  // async Find_Vwok_id(vwok_id) {
+  //   try {
+  //     let new_items = await vw_works_items.findAll({
+  //       where: { vwok_id },
+  //       order: [["createdAt", "DESC"]],
+  //     });
+  //     return new_items
+  //   } catch (error) {}
+  // }
 }
 
 export default new CTRL_Vwok_Item();
