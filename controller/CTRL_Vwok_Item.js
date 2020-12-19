@@ -84,16 +84,25 @@ class CTRL_Vwok_Item {
       return res.send({ msg: "更新工项出错", code: 705 });
     }
   }
-  // 通过Vwok_id获取子工项
-  // async Find_Vwok_id(vwok_id) {
-  //   try {
-  //     let new_items = await vw_works_items.findAll({
-  //       where: { vwok_id },
-  //       order: [["createdAt", "DESC"]],
-  //     });
-  //     return new_items
-  //   } catch (error) {}
-  // }
+  async Get_Today_Wok(req, res) { // jiekou未完成
+    try {
+      console.log(1231231);
+      let wokList = await vw_works_items.findAll({
+        where: {
+          updatedAt: {
+            [Op.like]: "%" + "2020-12-18" + "%",
+          },
+        },
+        order: [["updatedAt", "DESC"]],
+      });
+      return res.send({
+        wokList,
+      });
+    } catch (error) {
+      console.log(error);
+      return res.send({ msg: "更新工项出错", code: 705 ,error});
+    }
+  }
 }
 
 export default new CTRL_Vwok_Item();

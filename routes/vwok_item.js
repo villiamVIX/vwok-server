@@ -12,5 +12,6 @@ router.post("/create",CTRL_Vwok_Item.Create_Wok_Item);
 
 router.post("/update",CTRL_Vwok_Item.Update_Wok_Item);
 
+router.get("/today/estimate",CTRL_Vwok_Item.Get_Today_Wok);
 
 module.exports = router;
