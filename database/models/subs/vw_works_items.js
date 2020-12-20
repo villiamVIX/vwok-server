@@ -2,6 +2,8 @@ const { Sequelize, sequelize } = require("../../init");
 
 const DataTypes = require("sequelize/lib/data-types");
 const db_Name = "vw_works_items";
+const Op = Sequelize.Op;
+
 
 const vw_works_items = sequelize.define(db_Name, {
   vwok_item_id: {
@@ -83,7 +85,7 @@ const vw_works_items = sequelize.define(db_Name, {
       notEmpty: true,
     },
     comment: "备注",
-  },
+  }
 });
 
 vw_works_items
@@ -96,4 +98,4 @@ vw_works_items
     console.log(`${db_Name}表模型同步`);
   });
 
-module.exports = vw_works_items;
+module.exports = {vw_works_items,Op};

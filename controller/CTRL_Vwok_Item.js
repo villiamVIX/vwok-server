@@ -1,6 +1,6 @@
 import vw_users from "../database/models/vw_users.js";
 import vw_works from "../database/models/vw_works.js";
-import vw_works_items from "../database/models/subs/vw_works_items.js";
+import { vw_works_items, Op } from "../database/models/subs/vw_works_items.js";
 
 var that; // 改变this指向全局
 class CTRL_Vwok_Item {
@@ -76,7 +76,7 @@ class CTRL_Vwok_Item {
       }
       let new_items = await vw_works_items.findAll({
         where: { vwok_id },
-        order: [["createdAt", "DESC"]],
+        order: [["updatedAt", "DESC"]],
       });
 
       return res.send({ result: new_items, code: 200 });
@@ -86,21 +86,24 @@ class CTRL_Vwok_Item {
   }
   async Get_Today_Wok(req, res) { // jiekou未完成
     try {
-      console.log(1231231);
+      let today = new Date().Format('yyyy-MM-dd')
+      // 模糊查询当日改动的工项
       let wokList = await vw_works_items.findAll({
         where: {
           updatedAt: {
-            [Op.like]: "%" + "2020-12-18" + "%",
+            [Op.gte]: '%'+today+'%' 
           },
         },
         order: [["updatedAt", "DESC"]],
       });
       return res.send({
         wokList,
+        code:200,
+        msg:'获取今日预计工项成功'
       });
     } catch (error) {
       console.log(error);
-      return res.send({ msg: "更新工项出错", code: 705 ,error});
+      return res.send({ msg: "获取今日预计工项失败", code: 705, error });
     }
   }
 }
