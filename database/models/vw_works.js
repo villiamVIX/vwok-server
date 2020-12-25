@@ -28,7 +28,7 @@ const vw_works = sequelize.define(db_Name, {
     },
     comment: "创建人id",
   },
-  wok_name: {
+  vwok_name: {
     type: Sequelize.STRING,
     allowNull: false,
     validate: {
@@ -81,6 +81,7 @@ const vw_works = sequelize.define(db_Name, {
 vw_works
   .sync({
     alter: true,
+    // force: true,
   })
   .then(() => {
     // 建表

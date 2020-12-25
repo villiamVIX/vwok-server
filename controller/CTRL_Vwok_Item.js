@@ -2,6 +2,8 @@ import vw_users from "../database/models/vw_users.js";
 import vw_works from "../database/models/vw_works.js";
 import { vw_works_items, Op } from "../database/models/subs/vw_works_items.js";
 
+vw_works_items.belongsTo(vw_works, { foreignKey: "vwok_id", as: "vw_works" });
+
 var that; // 改变this指向全局
 class CTRL_Vwok_Item {
   constructor() {
@@ -84,25 +86,34 @@ class CTRL_Vwok_Item {
       return res.send({ msg: "更新工项出错", code: 705 });
     }
   }
-  async Get_Today_Wok(req, res) { // jiekou未完成
+  async Get_Today_Wok(req, res) {
     try {
-      let today = new Date().Format('yyyy-MM-dd')
+      let today = new Date().Format("yyyy-MM-dd");
+      let { uid, date = today } = req.query; // 可导出指定日期之后
+      // 待开发：导出~段时间工项
+      console.log(date);
       // 模糊查询当日改动的工项
       let wokList = await vw_works_items.findAll({
         where: {
-          updatedAt: {
-            [Op.gte]: '%'+today+'%' 
-          },
+          uid, // 根据UID
+          updatedAt: { [Op.gte]: "%" + today + "%" }, // 大于现有日期
         },
+        include: [
+          {
+            model: vw_works, // 关联查询
+            as: "vw_works",  // 别名 
+            attributes: ["vwok_name"], // 查询字段
+          },
+        ],
         order: [["updatedAt", "DESC"]],
       });
+      console.log(wokList);
       return res.send({
-        wokList,
-        code:200,
-        msg:'获取今日预计工项成功'
+        result: { wokList, today },
+        code: 200,
+        msg: "获取今日预计工项成功",
       });
     } catch (error) {
-      console.log(error);
       return res.send({ msg: "获取今日预计工项失败", code: 705, error });
     }
   }

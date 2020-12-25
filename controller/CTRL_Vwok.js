@@ -51,7 +51,7 @@ class CTRL_Vwok {
   async Create_Wok(req, res) {
     try {
       let {
-        wok_name,
+        vwok_name,
         start_time,
         estimate_time,
         creater_name,
@@ -64,7 +64,7 @@ class CTRL_Vwok {
       }
 
       const main_works = await vw_works.create({
-        wok_name,
+        vwok_name,
         start_time,
         estimate_time,
         creater_name,
