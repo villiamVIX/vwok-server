@@ -86,7 +86,7 @@ class CTRL_Vwok_Item {
       return res.send({ msg: "更新工项出错", code: 705 });
     }
   }
-  async Get_Today_Wok(req, res) {
+  async Get_Today_Vwok(req, res) {
     try {
       let today = new Date().Format("yyyy-MM-dd");
       let { uid, date = today } = req.query; // 可导出指定日期之后
@@ -111,10 +111,10 @@ class CTRL_Vwok_Item {
       return res.send({
         result: { wokList, today },
         code: 200,
-        msg: "获取今日预计工项成功",
+        msg: "获取今日工项成功",
       });
     } catch (error) {
-      return res.send({ msg: "获取今日预计工项失败", code: 705, error });
+      return res.send({ msg: "获取今日工项失败", code: 706, error });
     }
   }
 }
