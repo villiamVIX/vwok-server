@@ -11,14 +11,14 @@ function is_Token_Ok(req) {
 }
 
 router.all(/^\/vwok/, async (req, res, next) => {
-  const { msg } = is_Token_Ok(req);
+  const { msg,data } = is_Token_Ok(req);
 
   console.log(`
   **********************
   登录状态：${msg}
   **********************`);
 
-  msg == "Been_Login" ? next() : res.status(401).send({ msg });
+  msg == "Been_Login" ? (next(),req.User=data) : res.status(401).send({ msg });
 });
 
 /*

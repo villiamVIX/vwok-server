@@ -37,8 +37,8 @@ const vw_works = sequelize.define(db_Name, {
     comment: "任务名",
   },
   start_time: {
-	type: Sequelize.DATEONLY,
-	allowNull: false,
+    type: Sequelize.DATEONLY,
+    allowNull: false,
     validate: {
       notEmpty: true,
     },
@@ -52,20 +52,20 @@ const vw_works = sequelize.define(db_Name, {
     comment: "预计完成时间",
   },
   teammate: {
-	type: Sequelize.STRING,
+    type: Sequelize.STRING,
     validate: {
       notEmpty: true,
-	},
-	// allowNull: false,
+    },
+    // allowNull: false,
     // get() {
-	//   return this.getDataValue("teammate").split(",");
+    //   return this.getDataValue("teammate").split(",");
     // },
     // set(value) {
-	// 	if(Array.isArray(value)){
-	// 		return this.setDataValue("teammate", value.join(","));
-	// 	}
-	// 	console.log(value)
-	// 	return this.getDataValue("teammate")
+    // 	if(Array.isArray(value)){
+    // 		return this.setDataValue("teammate", value.join(","));
+    // 	}
+    // 	console.log(value)
+    // 	return this.getDataValue("teammate")
     // },
     comment: "参与团队人员",
   },
@@ -75,6 +75,13 @@ const vw_works = sequelize.define(db_Name, {
       notEmpty: true,
     },
     comment: "总进度",
+  },
+  updatedAt: {
+    type: Sequelize.DATE,
+    validate: {
+      notEmpty: true,
+    },
+    comment: "更新时间",
   },
 });
 

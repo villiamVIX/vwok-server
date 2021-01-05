@@ -19,7 +19,7 @@ class CTRL_Vwok {
         where: { uid },
         order: [["updatedAt", "DESC"]],
       });
-
+      
       let { rows, count } = wokList;
       let { data, total } = { data: rows, total: count };
       let result = { data, total };
