@@ -10,7 +10,9 @@ router.get("/teammate", CTRL_Vwok_Item.Get_TeammateList);
 
 router.post("/create",CTRL_Vwok_Item.Create_Wok_Item);
 
-router.post("/update",CTRL_Vwok_Item.Update_Wok_Item);
+router.post("/update",CTRL_Vwok_Item.Update_Wok_Item_v2,CTRL_Vwok_Item.FindBy_Vwok_id);
+
+router.post("/update/today",CTRL_Vwok_Item.Update_Wok_Item_v2,CTRL_Vwok_Item.Get_Today_Vwok);
 
 router.get("/todayvwok",CTRL_Vwok_Item.Get_Today_Vwok);
 

@@ -14,7 +14,7 @@ class CTRL_Vwok_Item {
   async Get_Item(req, res) {
     try {
       // let {uid} = req.User
-     
+
       let { vwok_id } = req.query;
 
       let wokList = await vw_works_items.findAll({
@@ -28,7 +28,7 @@ class CTRL_Vwok_Item {
           },
         ],
       });
-      
+
       res.send({ code: 200, result: wokList });
     } catch (error) {
       console.log(error);
@@ -77,20 +77,23 @@ class CTRL_Vwok_Item {
   // 更新工项
   async Update_Wok_Item(req, res) {
     try {
-      let { vwok_id } = req.body[0]; // 获取子工项上一级ID
-
-      let data_Len = req.body.length;
-      for (let i = 0; i < data_Len; i++) {
-        let {vwok_item_id ,vwok_id} = req.body[i];
+      // let { vwok_id } = req.body[0]; // 获取子工项上一级ID
+      // var vwok_id
+      for (let i = 0, j = req.body.length; i < j; i++) {
+        let { vwok_item_id, vwok_id } = req.body[i];
         let current_Data = req.body[i];
         await vw_works_items.update(current_Data, {
           where: { vwok_item_id },
         });
         //  2020-12-31 刷新updatetime
-        await vw_works.update({vwok_id}, {
-          where: {vwok_id},
-        });
+        await vw_works.update(
+          { vwok_id },
+          {
+            where: { vwok_id },
+          }
+        );
       }
+      console.log(vwok_id);
       let new_items = await vw_works_items.findAll({
         where: { vwok_id },
         order: [["createdAt", "DESC"]],
@@ -108,13 +111,59 @@ class CTRL_Vwok_Item {
       return res.send({ msg: "更新工项出错", code: 705 });
     }
   }
+  // 更新工项V2.0
+  async FindBy_Vwok_id(req, res) {
+    try {
+      let { vwok_id } = req.body.queryData;
+      console.log(vwok_id);
+      let new_items = await vw_works_items.findAll({
+        where: { vwok_id },
+        order: [["updatedAt", "DESC"]],
+        include: [
+          {
+            model: vw_works, // 关联查询
+            as: "vw_works", // 别名
+            attributes: ["vwok_name"], // 查询字段
+          },
+        ],
+      });
+      return res.send({ result: new_items, code: 200 });
+    } catch (error) {
+      return res.send({ msg: "更新工项出错", code: 705 });
+    }
+  }
+  async Update_Wok_Item_v2(req, res, next) {
+    try {
+      for (let i = 0, j = req.body.length; i < j; i++) {
+        let current_Data = req.body[i];
+        let { vwok_item_id, vwok_id } = current_Data;
+        await vw_works_items.update(current_Data, {
+          where: { vwok_item_id },
+        });
+        //  2020-12-31 刷新updatetime
+        await vw_works.update(
+          { vwok_id },
+          {
+            where: { vwok_id },
+          }
+        );
+      }
+      req.body.queryData = {
+        vwok_id: req.body[0].vwok_id,
+      };
+      next();
+    } catch (error) {
+      return res.send({ msg: "更新工项出错", code: 705 });
+    }
+  }
   // 获取今日工项
   async Get_Today_Vwok(req, res) {
     try {
       var today = new Date().Format("yyyy-MM-dd");
-      let { uid, date = today } = req.query; // 可导出指定日期之后
+      // 获取token里的uid
+      let { uid = req.User.uid, date = today } = req.query; // 可导出指定日期之后
       // 待开发：导出~段时间工项
-      console.log(date);
+
       // 模糊查询当日改动的工项
       let wokList = await vw_works_items.findAll({
         where: {

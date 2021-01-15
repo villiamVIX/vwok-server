@@ -1,8 +1,9 @@
 const Sequelize = require("sequelize");
 const host = "v.coderv.cn";
 // const host = "localhost";
+const DB = 'Vwok_Test'
 
-const sequelize = new Sequelize("Vwok", "root", "zw11663", {
+const sequelize = new Sequelize(DB, "root", "zw11663", {
   host,
   dialect: "mysql",
   port: "33060",
@@ -24,9 +25,9 @@ sequelize
   .authenticate()
   .then(() => {
     console.log(`
-		                  ##########################################################
-		                      成功连接到数据库，地址: ${host}
-		                  ##########################################################
+		                ##########################################################
+		                    成功连接到数据库，地址: ${host};库：${DB}
+		                ##########################################################
 		`);
   })
   .catch((err) => {
