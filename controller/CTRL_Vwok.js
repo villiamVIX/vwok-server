@@ -78,6 +78,17 @@ class CTRL_Vwok {
       return res.send({ msg: "新建工项出错", code: 701 });
     }
   }
+  async Update_Vwok_Name(req,res){
+    try {
+      let {vwok_name,vwok_id} = req.body
+      await vw_works.update({vwok_name}, {
+        where: { vwok_id },
+      });
+      return res.send({ msg: "修改工项名称成功", code: 200 });
+    } catch (error) {
+      return res.send({ msg: "修改工项名称出错", code: 708 });
+    }
+  }
 }
 
 export default new CTRL_Vwok();

@@ -11,6 +11,8 @@ router.get("/woklist", CTRL_Vwok.Get_WokList);
 router.get("/teammate", CTRL_Vwok.Get_TeammateList);
 
 router.post("/create",CTRL_Vwok.Create_Wok);
+// 改工项名
+router.post("/update/vwokname",CTRL_Vwok.Update_Vwok_Name);
 
 
 module.exports = router;

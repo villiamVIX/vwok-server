@@ -28,7 +28,6 @@ class CTRL_Vwok_Item {
           },
         ],
       });
-
       res.send({ code: 200, result: wokList });
     } catch (error) {
       console.log(error);
@@ -74,43 +73,6 @@ class CTRL_Vwok_Item {
       return res.send({ msg: "新建子工项出错", code: 702 });
     }
   }
-  // 更新工项
-  async Update_Wok_Item(req, res) {
-    try {
-      // let { vwok_id } = req.body[0]; // 获取子工项上一级ID
-      // var vwok_id
-      for (let i = 0, j = req.body.length; i < j; i++) {
-        let { vwok_item_id, vwok_id } = req.body[i];
-        let current_Data = req.body[i];
-        await vw_works_items.update(current_Data, {
-          where: { vwok_item_id },
-        });
-        //  2020-12-31 刷新updatetime
-        await vw_works.update(
-          { vwok_id },
-          {
-            where: { vwok_id },
-          }
-        );
-      }
-      console.log(vwok_id);
-      let new_items = await vw_works_items.findAll({
-        where: { vwok_id },
-        order: [["createdAt", "DESC"]],
-        include: [
-          {
-            model: vw_works, // 关联查询
-            as: "vw_works", // 别名
-            attributes: ["vwok_name"], // 查询字段
-          },
-        ],
-      });
-
-      return res.send({ result: new_items, code: 200 });
-    } catch (error) {
-      return res.send({ msg: "更新工项出错", code: 705 });
-    }
-  }
   // 更新工项V2.0
   async FindBy_Vwok_id(req, res) {
     try {
@@ -129,10 +91,10 @@ class CTRL_Vwok_Item {
       });
       return res.send({ result: new_items, code: 200 });
     } catch (error) {
-      return res.send({ msg: "更新工项出错", code: 705 });
+      return res.send({ msg: "查询工项出错_By_Vwok_id", code: 707 });
     }
   }
-  async Update_Wok_Item_v2(req, res, next) {
+  async Update_Wok_Item(req, res, next) {
     try {
       for (let i = 0, j = req.body.length; i < j; i++) {
         let current_Data = req.body[i];
@@ -140,7 +102,6 @@ class CTRL_Vwok_Item {
         await vw_works_items.update(current_Data, {
           where: { vwok_item_id },
         });
-        //  2020-12-31 刷新updatetime
         await vw_works.update(
           { vwok_id },
           {
