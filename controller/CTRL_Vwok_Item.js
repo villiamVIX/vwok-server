@@ -33,7 +33,7 @@ class CTRL_Vwok_Item {
       console.log(error);
       return res.send({
         msg: "查询子工项失败",
-        code: 704,
+        code: 700,
       });
     }
   }
@@ -48,7 +48,7 @@ class CTRL_Vwok_Item {
     } catch (error) {
       return res.send({
         msg: "获取团队成员失败",
-        code: 703,
+        code: 701,
       });
     }
   }
@@ -91,7 +91,7 @@ class CTRL_Vwok_Item {
       });
       return res.send({ result: new_items, code: 200 });
     } catch (error) {
-      return res.send({ msg: "查询工项出错_By_Vwok_id", code: 707 });
+      return res.send({ msg: "查询工项出错_By_Vwok_id", code: 703 });
     }
   }
   async Update_Wok_Item(req, res, next) {
@@ -114,7 +114,7 @@ class CTRL_Vwok_Item {
       };
       next();
     } catch (error) {
-      return res.send({ msg: "更新工项出错", code: 705 });
+      return res.send({ msg: "更新工项出错", code: 704 });
     }
   }
   // 获取今日工项
@@ -147,7 +147,7 @@ class CTRL_Vwok_Item {
         msg: "获取今日工项成功",
       });
     } catch (error) {
-      return res.send({ msg: "获取今日工项失败", code: 706, error });
+      return res.send({ msg: "获取今日工项失败", code: 705, error });
     }
   }
 }

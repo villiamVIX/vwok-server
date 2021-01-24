@@ -14,5 +14,7 @@ router.post("/create",CTRL_Vwok.Create_Wok);
 // 改工项名
 router.post("/update/vwokname",CTRL_Vwok.Update_Vwok_Name);
 
+// 终结工项
+router.post("/end/vwok",CTRL_Vwok.End_Vwok,CTRL_Vwok.Get_WokList);
 
 module.exports = router;

@@ -56,17 +56,6 @@ const vw_works = sequelize.define(db_Name, {
     validate: {
       notEmpty: true,
     },
-    // allowNull: false,
-    // get() {
-    //   return this.getDataValue("teammate").split(",");
-    // },
-    // set(value) {
-    // 	if(Array.isArray(value)){
-    // 		return this.setDataValue("teammate", value.join(","));
-    // 	}
-    // 	console.log(value)
-    // 	return this.getDataValue("teammate")
-    // },
     comment: "参与团队人员",
   },
   total_progress: {
@@ -83,6 +72,7 @@ const vw_works = sequelize.define(db_Name, {
     },
     comment: "更新时间",
   },
+
 });
 
 vw_works
