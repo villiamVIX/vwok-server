@@ -57,6 +57,7 @@ class CTRL_Vwok_Item {
     try {
       let { vwok_item_name, uid, vwok_id } = req.body;
 
+      console.log(req.body);
       const wok_item = await vw_works_items.create({
         vwok_item_name,
         uid,

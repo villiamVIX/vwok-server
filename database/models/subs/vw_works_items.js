@@ -17,6 +17,9 @@ const vw_works_items = sequelize.define(db_Name, {
   vwok_id: {
     type: DataTypes.STRING,
     allowNull: false,
+    validate: {
+      notEmpty: true,
+    },
     comment: "主任务id",
   },
   uid: {
@@ -70,6 +73,7 @@ const vw_works_items = sequelize.define(db_Name, {
     validate: {
       notEmpty: true,
     },
+    defaultValue:'100', // 默认百分百进度
     comment: "滑动条预计进度",
   },
   scroll_actual: {
