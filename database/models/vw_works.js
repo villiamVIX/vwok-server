@@ -1,6 +1,4 @@
-const { Sequelize, sequelize } = require("../init.js");
-
-const DataTypes = require("sequelize/lib/data-types");
+const { Sequelize, sequelize, DataTypes } = require("../init.js");
 const db_Name = "vw_works";
 
 const vw_works = sequelize.define(db_Name, {
@@ -77,7 +75,7 @@ const vw_works = sequelize.define(db_Name, {
 
 vw_works
   .sync({
-    alter: true,
+    // alter: true,
     // force: true,
   })
   .then(() => {

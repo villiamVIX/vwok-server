@@ -1,8 +1,6 @@
 import CTRL_User from "../../controller/CTRL_User.js";
 import bcrypt from "bcrypt";
 
-console.log(CTRL_User);
-
 class Check {
   constructor() {}
   async Check_Verify(req, res, next) {

@@ -1,9 +1,4 @@
-const {
-	Sequelize,
-	sequelize
-} = require('../init.js')
-
-const DataTypes = require('sequelize/lib/data-types');
+const { Sequelize, sequelize, DataTypes } = require('../init.js')
 const db_Name = 'vw_users'
 
 const vw_users = sequelize.define(db_Name, {
@@ -37,7 +32,9 @@ const vw_users = sequelize.define(db_Name, {
 	},
 })
 
-vw_users.sync({ alter: true }).then(() => {
+vw_users.sync({
+	//  alter: true 
+}).then(() => {
 	// 建表
 	console.log(`${db_Name}表模型同步`)
 })

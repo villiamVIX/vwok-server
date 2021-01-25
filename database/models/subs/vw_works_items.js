@@ -1,8 +1,5 @@
-const { Sequelize, sequelize } = require("../../init");
-
-const DataTypes = require("sequelize/lib/data-types");
+const { Sequelize, sequelize, DataTypes, Op } = require("../../init");
 const db_Name = "vw_works_items";
-const Op = Sequelize.Op;
 
 
 const vw_works_items = sequelize.define(db_Name, {
@@ -15,7 +12,7 @@ const vw_works_items = sequelize.define(db_Name, {
     comment: "子任务id主键",
   },
   vwok_id: {
-    type: DataTypes.STRING,
+    type: DataTypes.UUID,
     allowNull: false,
     validate: {
       notEmpty: true,
@@ -73,7 +70,7 @@ const vw_works_items = sequelize.define(db_Name, {
     validate: {
       notEmpty: true,
     },
-    defaultValue:'100', // 默认百分百进度
+    defaultValue: '100', // 默认百分百进度
     comment: "滑动条预计进度",
   },
   scroll_actual: {
@@ -102,4 +99,5 @@ vw_works_items
     console.log(`${db_Name}表模型同步`);
   });
 
-module.exports = {vw_works_items,Op};
+
+module.exports = { vw_works_items, Op };

@@ -1,4 +1,6 @@
 const Sequelize = require("sequelize");
+const DataTypes = require("sequelize/lib/data-types");
+const Op = Sequelize.Op;
 const host = "v.coderv.cn";
 // const host = "localhost";
 const DB = 'Vwok_Test'
@@ -37,4 +39,6 @@ sequelize
 module.exports = {
   Sequelize,
   sequelize,
+  DataTypes,
+  Op
 };
