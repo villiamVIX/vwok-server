@@ -13,8 +13,6 @@ class CTRL_Vwok_Item {
   // 查询个人工项
   async Get_Item(req, res) {
     try {
-      // let {uid} = req.User
-
       let { vwok_id } = req.query;
 
       let wokList = await vw_works_items.findAll({
@@ -97,6 +95,7 @@ class CTRL_Vwok_Item {
   }
   async Update_Wok_Item(req, res, next) {
     try {
+      console.log(req.body);
       for (let i = 0, j = req.body.length; i < j; i++) {
         let current_Data = req.body[i];
         let { vwok_item_id, vwok_id } = current_Data;
