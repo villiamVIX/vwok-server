@@ -38,7 +38,7 @@ import CTRL_Vwok_Item from "../controller/CTRL_Vwok_Item.js";
     ]  
  *  }
  */
-router.get("/getitem", CTRL_Vwok_Item.Get_Item);
+router.get("/getitem", CTRL_Vwok_Item.FindBy_Vwok_id);
 
 /**
  * @api {get} /vwok/item/teammate 02-获取团队成员
@@ -78,26 +78,34 @@ router.get("/teammate", CTRL_Vwok_Item.Get_TeammateList);
 *
 * @apiSuccessExample {json} 成功返回样例:
  {
-	"result": [{
-		"vwok_item_id": "13d14db0-5fb7-11eb-a0dc-fb06b46ac231",
-		"vwok_id": "22bbda10-4587-11eb-89f0-d93442742f19",
-		"uid": "f4fb6480-2bd0-11eb-95e3-f54fb34fd803",
-		"vwok_item_name": "567 ",
-		"start_time": "2021-01-26",
-		"estimate_time": null,
-		"jira": null,
-		"progress": null,
-		"scroll_estimate": 100,
-		"scroll_actual": null,
-		"remark": null,
-		"createdAt": "2021-01-26 17:15:48",
-		"updatedAt": "2021-01-26 17:15:48"
-	}, ],
+    "result": 
+    [{
+		"vwok_item_id": "84f94080-6208-11eb-850c-479fe27ce40e",
+        "vwok_id": "22bbda10-4587-11eb-89f0-d93442742f19",
+        "uid": "f4fb6480-2bd0-11eb-95e3-f54fb34fd803",
+        "vwok_item_name": "实例数据",
+        "start_time": "2021-01-29",
+        "estimate_time": null,
+        "jira": null,
+        "progress": null,
+        "scroll_estimate": 100,
+        "scroll_actual": null,
+        "remark": null,
+        "createdAt": "2021-01-29 16:03:49",
+        "updatedAt": "2021-01-29 16:03:49",
+        "vw_works": {
+            "vwok_name": "思明区_客户问撒旦苏打阿斯"
+        }
+	}],
 	"msg": "新建子工项成功",
 	"code": 200
  *}
  */
-router.post("/create", CTRL_Vwok_Item.Create_Wok_Item);
+router.post(
+  "/create",
+  CTRL_Vwok_Item.Create_Wok_Item,
+  CTRL_Vwok_Item.FindBy_Vwok_id
+);
 
 /**
  * @api {post} /vwok/item/update 04-更新工项
@@ -135,19 +143,19 @@ router.post("/create", CTRL_Vwok_Item.Create_Wok_Item);
  {
     "result": [
         {
-            "vwok_item_id": "13d14db0-5fb7-11eb-a0dc-fb06b46ac231",
+           "vwok_item_id": "84f94080-6208-11eb-850c-479fe27ce40e",
             "vwok_id": "22bbda10-4587-11eb-89f0-d93442742f19",
             "uid": "f4fb6480-2bd0-11eb-95e3-f54fb34fd803",
-            "vwok_item_name": "567  ",
-            "start_time": "2021-01-26",
+            "vwok_item_name": "实例数据",
+            "start_time": "2021-01-29",
             "estimate_time": null,
             "jira": null,
             "progress": null,
             "scroll_estimate": 100,
             "scroll_actual": null,
             "remark": null,
-            "createdAt": "2021-01-26 17:15:48",
-            "updatedAt": "2021-01-26 17:47:22",
+            "createdAt": "2021-01-29 16:03:49",
+            "updatedAt": "2021-01-29 16:03:49",
             "vw_works": {
                 "vwok_name": "思明区_客户问撒旦苏打阿斯"
             }
@@ -173,7 +181,6 @@ router.post(
   CTRL_Vwok_Item.Update_Wok_Item,
   CTRL_Vwok_Item.Get_Today_Vwok
 );
-
 
 /**
  * @api {post} /vwok/item/update/today 06-获取今日工项
