@@ -34,15 +34,6 @@ const vw_works_items = sequelize.define(db_Name, {
     },
     comment: "任务名",
   },
-  start_time: {
-    type: Sequelize.DATEONLY,
-    defaultValue: new Date(),
-    allowNull: false,
-    validate: {
-      notEmpty: true,
-    },
-    comment: "开始时间",
-  },
   estimate_time: {
     type: Sequelize.DATEONLY,
     validate: {
@@ -69,7 +60,7 @@ const vw_works_items = sequelize.define(db_Name, {
     validate: {
       notEmpty: true,
     },
-    defaultValue: "100", // 默认百分百进度
+    defaultValue: 100, // 默认百分百进度
     comment: "滑动条预计进度",
   },
   scroll_actual: {
@@ -77,6 +68,7 @@ const vw_works_items = sequelize.define(db_Name, {
     validate: {
       notEmpty: true,
     },
+    defaultValue: 0, // 默认0进度
     comment: "滑动条实际进度",
   },
   remark: {

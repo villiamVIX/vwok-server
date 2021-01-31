@@ -10,6 +10,7 @@ class CTRL_Vwok_Item {
   constructor() {
     that = this;
   }
+
   // 查询团队成员
   async Get_TeammateList(req, res) {
     try {
@@ -66,21 +67,13 @@ class CTRL_Vwok_Item {
   }
   async Update_Wok_Item(req, res, next) {
     try {
-      for (let i = 0, j = req.body.length; i < j; i++) {
-        let current_Data = req.body[i];
-        let { vwok_item_id, vwok_id } = current_Data;
-        await vw_works_items.update(current_Data, {
-          where: { vwok_item_id },
-        });
-        // 刷一下更改时间
-        await vw_works.update({ vwok_id }, { where: { vwok_id } });
-      }
-      req.body.queryData = {
-        vwok_id: req.body[0].vwok_id,
-      };
-
-      next();
+      let { vwok_item_id, diff_data ,vwok_id} = req.body
+      console.log(req.body);
+      await vw_works_items.update(diff_data, { where: { vwok_item_id } })
+      await vw_works.update({ vwok_id }, { where: { vwok_id } });// 刷一下更改时间
+      next()
     } catch (error) {
+      console.log(error);
       return res.send({ msg: "更新工项出错", code: 704 });
     }
   }
