@@ -3,16 +3,12 @@ const express = require("express");
 const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
-const userRouter = require("./routes/user");
-const vwokRouter = require("./routes/vwok");
-const vwokItemRouter = require("./routes/vwok_item");
-const Util = require('./common/Utils/util')
-const port = 3009;
+const session = require("express-session");
+const { port, session_cfg } = require("./config/default");
+import router from './routes/index_routers'
+require("./common/Utils/util");
 
 // 中间件 - 登录校验
-const auth = require("./middlewares/auth/auth.js");
-
-const session = require("express-session");
 const app = express();
 
 app.all("*", (req, res, next) => {
@@ -33,21 +29,8 @@ app.all("*", (req, res, next) => {
   }
 });
 
-
 // 配置session(需要配置在路由之前)
-app.use(
-  session({
-    secret: "$#%$%$%",
-    name: "sessionId",
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-      maxAge: 1000 * 60 * 60 * 24,
-      SameSite: "none",
-      Secure: true,
-    },
-  })
-);
+app.use(session(session_cfg));
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
@@ -63,17 +46,10 @@ app.use(
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
-app.use("/", auth);
-app.use("/user", userRouter);
-app.use("/vwok", vwokRouter);
-app.use("/vwok/item", vwokItemRouter);
-
-
+// load router
+router(app)
+// init dbs
 require("./database/init.js");
-require("./database/models/vw_users.js");
-require("./database/models/vw_works.js");
-require("./database/models/subs/vw_works_items.js");
-
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

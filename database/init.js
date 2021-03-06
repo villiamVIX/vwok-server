@@ -42,3 +42,7 @@ module.exports = {
   DataTypes,
   Op
 };
+
+require('./models/vw_users')
+require("./models/vw_works.js");
+require("./models/subs/vw_works_items.js");

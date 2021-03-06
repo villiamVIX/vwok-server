@@ -1,3 +1,4 @@
+'use strict';
 const express = require("express");
 
 const vw_users = require("../database/models/vw_users.js");
@@ -192,4 +193,6 @@ router.post("/login", Check.Check_Not_Exist, CTRL_User.Login);
 router.post("/tokenlogin", CTRL_User.Token_Login);
 
 module.exports = router;
-// export default router
+
+// export default new router()
+
