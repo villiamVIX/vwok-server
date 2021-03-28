@@ -43,9 +43,6 @@ const vw_works_items = sequelize.define(db_Name, {
   },
   jira: {
     type: Sequelize.STRING,
-    validate: {
-      notEmpty: true,
-    },
     comment: "jira单",
   },
   progress: {

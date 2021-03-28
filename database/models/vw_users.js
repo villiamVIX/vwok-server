@@ -33,7 +33,7 @@ const vw_users = sequelize.define(db_Name, {
 })
 
 vw_users.sync({
-	//  alter: true 
+	 alter: true 
 }).then(() => {
 	// 建表
 	console.log(`${db_Name}表模型同步`)

@@ -75,7 +75,7 @@ const vw_works = sequelize.define(db_Name, {
 
 vw_works
   .sync({
-    // alter: true,
+    alter: true,
     // force: true,
   })
   .then(() => {
