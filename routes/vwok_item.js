@@ -191,5 +191,14 @@ router.post(
  */
 router.get("/todayvwok", CTRL_Vwok_Item.Get_Today_Vwok);
 
+/**
+ * @api {post} /vwok/item/update/today 07-删除工项
+ * @apiGroup 03-子工项
+ * @apiParam {String} date<code>可选</code> 自定义的导出日期
+ * @apiParam {String} uid 用户id
+ */
+router.delete("/delete", CTRL_Vwok_Item.Del_Vwok_Item);
+
+
 module.exports = router;
 // export default router

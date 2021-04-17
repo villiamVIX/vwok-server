@@ -67,11 +67,11 @@ class CTRL_Vwok_Item {
   }
   async Update_Wok_Item(req, res, next) {
     try {
-      let { vwok_item_id, diff_data ,vwok_id} = req.body
+      let { vwok_item_id, diff_data, vwok_id } = req.body;
       console.log(req.body);
-      await vw_works_items.update(diff_data, { where: { vwok_item_id } })
-      await vw_works.update({ vwok_id }, { where: { vwok_id } });// 刷一下更改时间
-      next()
+      await vw_works_items.update(diff_data, { where: { vwok_item_id } });
+      await vw_works.update({ vwok_id }, { where: { vwok_id } }); // 刷一下更改时间
+      next();
     } catch (error) {
       console.log(error);
       return res.send({ msg: "更新工项出错", code: 704 });
@@ -80,16 +80,24 @@ class CTRL_Vwok_Item {
   // 获取今日工项
   async Get_Today_Vwok(req, res) {
     try {
-      var today = new Date().Format("yyyy-MM-dd");
       // 获取token里的uid
-      let { uid = req.User.uid, date = today } = req.query; // 之后可导出指定日期
-      // 待开发：导出~段时间工项
+      var currentDate = new Date().Format("yyyy-MM-dd"),
+        // 默认获取传入时间，无则赋值当天
+        { uid = req.User.uid, startDay = currentDate } = req.query,
+        startDate = new Date(startDay),
+        endDay = new Date(startDate.setDate(startDate.getDate() + 1)).Format(
+          "yyyy-MM-dd"
+        );
 
+      console.log(startDay, endDay);
       // 模糊查询当日改动的工项
       let wokList = await vw_works_items.findAll({
         where: {
           uid, // 根据UID
-          updatedAt: { [Op.gte]: "%" + today + "%" }, // 大于现有日期
+          // updatedAt: { [Op.gte]: "%" + startDay + "%" }, // 大于现有日期
+          updatedAt: {
+            [Op.between]: [startDay, endDay],
+          }, // 日期区间
         },
         include: [
           {
@@ -102,12 +110,42 @@ class CTRL_Vwok_Item {
       });
       console.log(wokList);
       return res.send({
-        result: { wokList, today },
+        result: { wokList, startDay },
         code: 200,
         msg: "获取今日工项成功",
       });
     } catch (error) {
       return res.send({ msg: "获取今日工项失败", code: 705, error });
+    }
+  }
+  async Del_Vwok_Item(req, res) {
+    try {
+      let data = req.body.data,
+        User_uid = req.User.uid;
+        
+      for (let i = 0, j = data.length; i < j; i++) {
+        console.log(data[i]);
+        let { uid, vwok_item_id } = data[i];
+        if (User_uid !== uid) {
+          return res.send({
+            code: 0,
+            msg: "只可删除本人创建的工项",
+          });
+        }
+        await vw_works_items.destroy({
+          where: {
+            vwok_item_id,
+          },
+        });
+      }
+      return res.send({
+        code: 200,
+        msg: "工项已删除",
+      });
+    } catch (error) {
+      console.log(JSON.stringify(error));
+
+      return res.send({ msg: "删除工项失败", code: 706 });
     }
   }
 }
