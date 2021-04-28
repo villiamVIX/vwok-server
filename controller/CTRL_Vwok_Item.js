@@ -68,7 +68,7 @@ class CTRL_Vwok_Item {
   async Update_Wok_Item(req, res, next) {
     try {
       let { vwok_item_id, diff_data, vwok_id } = req.body;
-      console.log(req.body);
+      // console.log( vwok_item_id, diff_data, vwok_id );
       await vw_works_items.update(diff_data, { where: { vwok_item_id } });
       await vw_works.update({ vwok_id }, { where: { vwok_id } }); // 刷一下更改时间
       next();
