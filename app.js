@@ -37,7 +37,7 @@ app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 
 app.use(logger("dev"));
-app.use(express.json());
+app.use(express.json()); // 解析传入的数据
 app.use(
   express.urlencoded({
     extended: false,

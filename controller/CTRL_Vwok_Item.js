@@ -138,6 +138,7 @@ class CTRL_Vwok_Item {
           },
         });
       }
+      console.log('删除成功');
       return res.send({
         code: 200,
         msg: "工项已删除",
