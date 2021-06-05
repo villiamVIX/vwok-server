@@ -36,23 +36,23 @@ const vw_works = sequelize.define(db_Name, {
   },
   start_time: {
     type: Sequelize.DATEONLY,
-    allowNull: false,
+    // allowNull: false,
     validate: {
-      notEmpty: true,
+      // notEmpty: true,
     },
     comment: "开始时间",
   },
   estimate_time: {
     type: Sequelize.DATEONLY,
     validate: {
-      notEmpty: true,
+      // notEmpty: true,
     },
     comment: "预计完成时间",
   },
   teammate: {
     type: Sequelize.STRING,
     validate: {
-      notEmpty: true,
+      // notEmpty: true,
     },
     comment: "参与团队人员",
   },
