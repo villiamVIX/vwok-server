@@ -4,6 +4,7 @@ const Op = Sequelize.Op;
 const host = "v.coderv.cn";
 // const host = "localhost";
 const DB = 'Vwok_Test'
+// const DB = 'Vwok_Test'
 
 const sequelize = new Sequelize(DB, "root", "zw11663", {
   host,

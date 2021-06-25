@@ -1,15 +1,25 @@
 const createError = require("http-errors");
 const express = require("express");
 const path = require("path");
+const morgan = require('morgan')
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const session = require("express-session");
+const fs = require("fs");
 const { port, session_cfg } = require("./config/default");
 import router from './routes/index_routers'
 require("./common/Utils/util");
 
+
+
 // 中间件 - 登录校验
 const app = express();
+
+// 日志模块
+const WriteStream = fs.createWriteStream('./common/logs/access.log',{
+  flags:"a+"
+})
+app.use(morgan('tiny',{stream:WriteStream}))
 
 app.all("*", (req, res, next) => {
   const { origin, Origin, referer, Referer } = req.headers;
@@ -41,6 +51,8 @@ app.use(express.json()); // 解析传入的数据
 app.use(
   express.urlencoded({
     extended: false,
+    // extended: true ->  第三方库qs
+    // extended: false->  Node内置模块queryString
   })
 ); // 设置请求格式
 app.use(cookieParser());

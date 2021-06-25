@@ -54,8 +54,8 @@ class CTRL_Vwok {
     try {
       let {
         vwok_name,
-        // start_time,
-        // estimate_time,
+        start_time,
+        estimate_time,
         creater_name,
         uid,
         teammate,
@@ -67,8 +67,8 @@ class CTRL_Vwok {
 
       const main_works = await vw_works.create({
         vwok_name,
-        // start_time,
-        // estimate_time,
+        start_time,
+        estimate_time,
         creater_name,
         uid,
         teammate,
